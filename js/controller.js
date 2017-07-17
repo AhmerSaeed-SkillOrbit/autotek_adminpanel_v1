@@ -1763,15 +1763,32 @@ app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope,
     }
 });
 
-app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter, Appointment) {
+app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter, $window) {
     $scope.final_obj = {};
     $scope.dateObj = {};
     $scope.saveBtnShow = true;
     $scope.updateBtnShow = false;
     $scope.loaderr = false;
     $scope.showgrid = true;
-    $scope.addShftYear = function () {
 
+    Branch.getShiftYears().success(function (res) {
+        console.log("shift years", res);
+        $rootScope.ShiftYears = [];
+        $rootScope.ShiftYears = res;
+        $rootScope.deleteShiftYearloader = [];
+        $rootScope.shiftYearLoading = false;
+        for (var i = 0; i < res.length; i++) {
+            $rootScope.deleteShiftYearloader.push(false);
+        }
+        $scope.loaderr = false;
+    })
+            .error(function (err) {
+                $rootScope.shiftYearLoading = false;
+                $scope.loaderr = false;
+            })
+
+
+    $scope.addShftYear = function () {
         try {
 
             $scope.final_obj.YearStartDate = $filter("date")($scope.dateObj.YearStartDate, 'yyyy-MM-dd');
@@ -1779,25 +1796,7 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
             $scope.loaderr = true;
             Branch.addShiftYears($scope.final_obj).success(function (res) {
                 console.log("res", res);
-
-                $scope.final_obj = {};
-                //$rootScope.ShiftYears.push(res);
-
-                Branch.getShiftYears().success(function (res) {
-                    console.log("shift years", res);
-                    $rootScope.ShiftYears = [];
-                    $rootScope.ShiftYears = res;
-                    $rootScope.deleteShiftYearloader = [];
-                    $rootScope.shiftYearLoading = false;
-                    for (var i = 0; i < res.length; i++) {
-                        $rootScope.deleteShiftYearloader.push(false);
-                    }
-                    $scope.loaderr = false;
-                })
-                        .error(function (err) {
-                            $rootScope.shiftYearLoading = false;
-                            $scope.loaderr = false;
-                        })
+                $window.location.reload();
             })
                     .error(function (err) {
                         $scope.loaderr = false;
@@ -1916,7 +1915,6 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
                 })
     }
 
-
     $scope.updateBranchShift = function (obj, $index) {
 
         $scope.gridShiftindex = $index;
@@ -2023,7 +2021,6 @@ app.controller('BranchWorkingCtrl', function ($scope, $rootScope, Branch) {
         }
         $scope.loaderr1 = true;
         Branch.updateWorkingDay(final_Days, $rootScope.branchId).success(function (res) {
-            alert("Successfully updated working days");
             $scope.loaderr1 = false;
         })
                 .error(function (err) {

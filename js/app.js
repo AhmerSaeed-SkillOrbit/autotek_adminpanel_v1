@@ -238,6 +238,11 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                         templateUrl: "/EnglishTemplates/appusers/detail.html",
                         controller: "profile_details_page"
                     })
+                    .state('shiftyears', {
+                        url: "/shiftyears",
+                        templateUrl: "/EnglishTemplates/shiftyears.html",
+                        controller: "BranchShitfCtrl"
+                    })
 
                     //----- Arabic Routes -----//
                     .state('appusersa', {
@@ -264,6 +269,7 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                         url: "/dashboarda",
                         templateUrl: "/ArabicPages/dashboard.html"
                     })
+
             //      $rootScope.navigate=function(state,params){
             //     var lang=localStorageService.get('pageLanguage');
             //     console.log(lang);
