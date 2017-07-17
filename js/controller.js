@@ -1787,7 +1787,7 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
                 $scope.loaderr = false;
             })
 
-
+//for adding shift year in shift year setup form
     $scope.addShftYear = function () {
         try {
 
@@ -1807,23 +1807,21 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
 
     }
 
-    $scope.updateShiftYear = function (obj, $index) {
-        $scope.gridindex = $index;
-        $scope.final_obj = obj;
-        $scope.dateObj = {
-            YearStartDate: new Date(obj.YearStartDate),
-            YearEndDate: new Date(obj.YearEndDate)
-        }
-        $scope.saveBtnShow = false;
-        $scope.updateBtnShow = true;
-        $scope.showgrid = false;
+//for deleting shift year in shift year setup form
+    $scope.deleteShift = function (obj, index) {
+        $rootScope.deleteShiftYearloader[index] = true;
+        Branch.deleteShiftYears(obj.Id).success(function (res) {
+            $rootScope.deleteShiftYearloader[index] = false;
+            $rootScope.ShiftYears.splice(index, 1);
+        })
+                .error(function (err) {
+                    $rootScope.deleteShiftYearloader[index] = false;
+                })
     }
 
+//for updating shift year in shift year setup form
     $scope.update = function () {
         try {
-//            $scope.final_obj.YearStartDate = $scope.dateObj.YearStartDate.toISOString().split('T')[0]
-//            $scope.final_obj.YearEndDate = $scope.dateObj.YearEndDate.toISOString().split('T')[0]
-
             $scope.final_obj.YearStartDate = $filter("date")($scope.dateObj.YearStartDate, 'yyyy-MM-dd');
             $scope.final_obj.YearEndDate = $filter("date")($scope.dateObj.YearEndDate, 'yyyy-MM-dd');
 
@@ -1846,15 +1844,17 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
         }
     }
 
-    $scope.deleteShift = function (obj, index) {
-        $rootScope.deleteShiftYearloader[index] = true;
-        Branch.deleteShiftYears(obj.Id).success(function (res) {
-            $rootScope.deleteShiftYearloader[index] = false;
-            $rootScope.ShiftYears.splice(index, 1);
-        })
-                .error(function (err) {
-                    $rootScope.deleteShiftYearloader[index] = false;
-                })
+//used when click on update button from grid
+    $scope.updateShiftYear = function (obj, $index) {
+        $scope.gridindex = $index;
+        $scope.final_obj = obj;
+        $scope.dateObj = {
+            YearStartDate: new Date(obj.YearStartDate),
+            YearEndDate: new Date(obj.YearEndDate)
+        }
+        $scope.saveBtnShow = false;
+        $scope.updateBtnShow = true;
+        $scope.showgrid = false;
     }
     ////////////////////////////////Branch shifts portions///////////////////////////////////////
     $scope.brShiftObj = {};

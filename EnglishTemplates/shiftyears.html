@@ -63,8 +63,8 @@
                             <div class="col-md-12">
                                 <div><br>
                                     <div class="btn btn-primary"  ng-class="{
-                                                    'spinner-wave'
-                                                            : loaderr == true}" ng-click="addShftYear()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Save</span>
+                                            'spinner-wave'
+                                            : loaderr == true}" ng-show="saveBtnShow" ng-click="addShftYear()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Save</span>
                                         <div></div>
                                         <div></div>
                                         <div></div>
@@ -72,8 +72,8 @@
                                         <div></div>
                                     </div>
                                     <div class="btn btn-primary" ng-show="updateBtnShow" ng-class="{
-                                                    'spinner-wave'
-                                                            : loaderr == true}" ng-click="update()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Update</span>
+                                            'spinner-wave'
+                                                    : loaderr == true}" ng-click="update()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Update</span>
                                         <div></div>
                                         <div></div>
                                         <div></div>
@@ -87,23 +87,23 @@
                                     <br><table class="table table-bordered table-hover dataTable">
                                         <thead>
                                             <tr>
-                                                <th class="bg-gray-light sorting">Start Date</th>
-                                                <th class="bg-gray-light sorting">End Date</th>
                                                 <th class="bg-gray-light sorting">Year Title (English)</th>
                                                 <th class="bg-gray-light sorting">Year Title (Arabic)</th>
+                                                <th class="bg-gray-light sorting">Start Date</th>
+                                                <th class="bg-gray-light sorting">End Date</th>
                                                 <th class="bg-gray-light sorting">Delete Action</th>
                                                 <th class="bg-gray-light sorting">Update Action</th>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="x in ShiftYears">
-                                                <td>{{x.YearStartDate| date:'MM/dd/yyyy'}}</td>
-                                                <td>{{x.YearEndDate| date:'MM/dd/yyyy'}}</td>
                                                 <td>{{x.YearTitle_En}}</td>
                                                 <td>{{x.YearTitle_Ar}}</td>
+                                                <td>{{x.YearStartDate| date:'MM/dd/yyyy'}}</td>
+                                                <td>{{x.YearEndDate| date:'MM/dd/yyyy'}}</td>
                                                 <td>
                                                     <div class="btn btn-primary" ng-class="{
-                                                                    'spinner-wave'
-                                                                            : deleteShiftYearloader[$index] == true}" ng-click="deleteShift(x, $index)"><span ng-if="!deleteShiftYearloader[$index]" class="ng-scope"><i class="fa fa-save"></i> Delete</span>
+                                                            'spinner-wave'
+                                                                    : deleteShiftYearloader[$index] == true}" ng-click="deleteShift(x, $index)"><span ng-if="!deleteShiftYearloader[$index]" class="ng-scope"><i class="fa fa-save"></i> Delete</span>
                                                         <div></div>
                                                         <div></div>
                                                         <div></div>
