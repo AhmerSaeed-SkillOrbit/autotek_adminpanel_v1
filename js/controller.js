@@ -1022,12 +1022,13 @@ app.controller('addNewAppUser', function ($scope, User, $http) {
 
         if ($scope.addUser.EmailAddress == null || $scope.addUser.EmailAddress == "") {
             errors.push({message: 'Email is required'});
-        } else {
-            var email = $scope.addUser.EmailAddress.match($scope.regex);
-            if (email == null) {
-                errors.push({message: 'Not a valid email'});
-            }
-        }
+        } 
+        // else {
+        //     var email = $scope.addUser.EmailAddress.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({message: 'Not a valid email'});
+        //     }
+        // }
 
         if ($scope.addUser.Password == null || $scope.addUser.Password == "") {
             errors.push({message: 'Password is required'})
@@ -1114,6 +1115,25 @@ app.controller('addNewAppUser', function ($scope, User, $http) {
 })
 
 app.controller('addNewPromotion', function ($state, $scope, User, $http) {
+    // $scope.show = true;
+    $scope.show = false;
+    $scope.errorText = '';
+
+    // $scope.addPromotion.cTypes='';
+    // console.log('scope.addPromotion.cTypes',$scope.addPromotion.cTypes)
+    // if($scope.addPromotion.cTypes == "All" || $scope.addPromotion.cTypes == "External"){
+    //     $scope.addPromotion.AffiliateCompanyId = 0;
+    // }else{
+
+    // }
+
+    // if($scope.addPromotion.OnTrigger == false){
+    //     $scope.addPromotion.DiscountCriteriaId = 0;
+    // }else{
+
+    // }
+
+    
     User.getTriggers().success(function (res) {
         $scope.allTriggers = res;
     })
@@ -1133,6 +1153,24 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
         $scope.addPromotion.status = "true";
     }
 
+    User.getCompanies(0, 10).success(function (res) {
+        $scope.allCompanies = res;
+    })
+    .error(function (err) {
+        console.log(err);
+    })
+ $scope.addPromotion.OnTrigger = false;
+    $scope.OnTriggerChange= function () {
+        // console.log("check : ",$scope.addPromotion.OnTrigger);
+        // console.log("check : ",$scope.addPromotion.companySelected.Id);
+        
+        if ($scope.addPromotion.OnTrigger == true) {
+            $scope.show = true;
+        }else{
+            $scope.show = false;
+        }
+    }
+
     $scope.AddPromotion = function () {
         // console.log($scope.addPromotion.Trigger.Id);
         // console.log($scope.user)
@@ -1146,12 +1184,28 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
         $scope.errorText = "";
 
         var errors = [];
+
+        if ($scope.addPromotion.cTypes == null || $scope.addPromotion.cTypes == "") {
+            errors.push({message: 'Type is required'})            
+        }else{
+            if ($scope.addPromotion.cTypes != "All" && $scope.addPromotion.cTypes != "External") {
+                if ($scope.addPromotion.companySelected == null || $scope.addPromotion.companySelected == "") {
+                    errors.push({message: 'Company is required'});
+                    $scope.errorText += "Company, "
+                }
+            }
+        }
+
         if ($scope.addPromotion.titelEn == null || $scope.addPromotion.titelEn == "") {
             errors.push({message: 'Title English is required'})
         }
 
         if ($scope.addPromotion.titelAr == null || $scope.addPromotion.titelAr == "") {
             errors.push({message: 'Title عربي is required'})
+        }
+
+        if ($scope.addPromotion.ExpiresOn == null || $scope.addPromotion.ExpiresOn == "") {
+            errors.push({message: 'Expire on is required'})
         }
 
         // if ($scope.addPromotion.titelEn == null || $scope.addPromotion.titelEn == "") {
@@ -1166,19 +1220,20 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
         if ($scope.addPromotion.Status == null || $scope.addPromotion.Status == "") {
             errors.push({message: 'Status is required'})
         }
-        if ($scope.addPromotion.Trigger == null || $scope.addPromotion.Trigger == "") {
-            errors.push({message: 'Trigger is required'})
+        if($scope.addPromotion.OnTrigger == true){
+            if ($scope.addPromotion.Trigger == null || $scope.addPromotion.Trigger == "") {
+                errors.push({message: 'Trigger is required'});
+                $scope.errorText += "Trigger, "
+            }
+            // if ($scope.addPromotion.templateCoupen == null || $scope.addPromotion.templateCoupen == "") {
+            //     errors.push({message: 'Template Coupen is required'})
+            // }
         }
-        if ($scope.addPromotion.templateCoupen == null || $scope.addPromotion.templateCoupen == "") {
-            errors.push({message: 'Template Coupen is required'})
-        }
-
-
-
+            
 
         if (errors.length != 0) {
             console.log('errors occured');
-            $scope.errorText = "Title English, Title عربي , Status , Trigger Or Template Coupon  is Empty";
+            $scope.errorText += "Type, Title English, Title عربي, Status Or Expire On is Empty";
             $scope.showErrorAlert = true;
             $scope.switchBool = function (value) {
                 $scope[value] = !$scope[value];
@@ -1194,10 +1249,25 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
 
             // }
             // console.log($scope.usercustom)
+            console.log('triger ',$scope.addPromotion.Trigger)
+            var tri_id = 0;
+
+            if ($scope.addPromotion.OnTrigger == false) {
+                console.log('triger if',$scope.addPromotion.Trigger)
+                tri_id = 0;
+            }else{
+                console.log('triger else',$scope.addPromotion.Trigger)
+                if($scope.addPromotion.Trigger != undefined){
+                   tri_id = $scope.addPromotion.Trigger.Id;    
+                }                
+            }
 
             $scope.promotionCustom = {
-                "DiscountCriteriaId": $scope.addPromotion.Trigger.Id,
+                // "DiscountCriteriaId": ($scope.addPromotion.OnTrigger == false? 0 : ),
+                "DiscountCriteriaId": tri_id,
+                "AffiliateCompanyId": ($scope.addPromotion.cTypes == "All" || $scope.addPromotion.cTypes == "External" ? 0 : $scope.addPromotion.companySelected.Id),
                 "CouponCode": $scope.addPromotion.templateCoupen,
+                "IsForAll" : ($scope.addPromotion.cTypes == "All" ? "true" : "false"),
                 "Description_EN": $scope.addPromotion.titelEn,
                 "Description_AR": $scope.addPromotion.titelAr,
                 "IsActive": $scope.addPromotion.status,
@@ -1306,12 +1376,13 @@ app.controller('addNewSalesAgent', function ($state, $scope, User, $http) {
 
         if ($scope.addSalesAgent.Email == null || $scope.addSalesAgent.Email == "") {
             errors.push({message: 'Email is required'});
-        } else {
-            var email = $scope.addSalesAgent.EmailAddress.match($scope.regex);
-            if (email == null) {
-                errors.push({message: 'Not a valid email'});
-            }
-        }
+        } 
+        // else {
+        //     var email = $scope.addSalesAgent.EmailAddress.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({message: 'Not a valid email'});
+        //     }
+        // }
 
         if ($scope.addSalesAgent.companeSelected == null || $scope.addSalesAgent.companeSelected == "") {
             errors.push({message: 'Company is required'})
@@ -1399,7 +1470,7 @@ app.controller('addNewSalesAgent', function ($state, $scope, User, $http) {
                         .error(function (err) {
                             var error = [{message: err.Message}]
                             $scope.loaderr = false
-                            $scope.errorText = err.Message;
+                            $scope.errorText = err;
                             $scope.showErrorAlert = true;
                             // $ionicLoading.hide();
                             // $scope.deactivate(error)
@@ -2595,13 +2666,14 @@ app.controller('SignupCtrl', ['$scope', '$rootScope', '$http', '$state', '$locat
 
             if ($scope.user.EmailAddress == null || $scope.user.EmailAddress == "") {
                 errors.push({message: 'Email is required'});
-            } else {
-                var email = $scope.user.EmailAddress.match($scope.regex);
-                if (email == null) {
-                    console.log("Error-4a");
-                    errors.push({message: 'Not a valid email'});
-                }
-            }
+            } 
+            // else {
+            //     var email = $scope.user.EmailAddress.match($scope.regex);
+            //     if (email == null) {
+            //         console.log("Error-4a");
+            //         errors.push({message: 'Not a valid email'});
+            //     }
+            // }
 
             // if ($scope.user.LastName == null || $scope.user.LastName == "") {
             //     errors.push({ message: 'Last Name is required' })
