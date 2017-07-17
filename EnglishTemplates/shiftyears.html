@@ -1,0 +1,101 @@
+
+<div class="form-horizontal">
+    <legend>Shift Basic Info</legend>
+    <div class="row form-group">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <label for="inputName" class="control-label">Year Title (English)</label>
+                <div class="input-group" style="">
+                    <input type="text" ng-model="final_obj.YearTitle_En" class="form-control" autocomplete="off" style="width: 522px;">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="inputName" class="control-label">Year Title (Arabic)</label>
+                <div class="input-group" style="">
+                    <input type="text" ng-model="final_obj.YearTitle_Ar" class="form-control" autocomplete="off" style="width: 522px;">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <br><label for="inputName" class="control-label">Start Date</label>
+                <div class="input-group" style="">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="date" ng-model="dateObj.YearStartDate" class="form-control datepicker" autocomplete="off">
+                </div>
+            </div>  
+            <div class="col-md-6">
+                <br><label for="inputName" class="control-label">End Date</label>
+                <div class="input-group" style="">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="date" ng-model="dateObj.YearEndDate" class="form-control datepicker" autocomplete="off">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div><br>
+                    <div class="btn btn-primary" ng-show="saveBtnShow" ng-class="{
+                                                    'spinner-wave'
+                                                            : loaderr == true}" ng-click="addShftYear()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Save</span>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div class="btn btn-primary" ng-show="updateBtnShow" ng-class="{
+                                                    'spinner-wave'
+                                                            : loaderr == true}" ng-click="update()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Update</span>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div ng-if="showgrid">
+                    <br><table class="table table-bordered table-hover dataTable">
+                        <thead>
+                            <tr>
+                                <th class="bg-gray-light sorting">Start Date</th>
+                                <th class="bg-gray-light sorting">End Date</th>
+                                <th class="bg-gray-light sorting">Year Title (English)</th>
+                                <th class="bg-gray-light sorting">Year Title (Arabic)</th>
+                                <th class="bg-gray-light sorting">Delete Action</th>
+                                <th class="bg-gray-light sorting">Update Action</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="x in ShiftYears">
+                                <td>{{x.YearStartDate| date:'MM/dd/yyyy'}}</td>
+                                <td>{{x.YearEndDate| date:'MM/dd/yyyy'}}</td>
+                                <td>{{x.YearTitle_En}}</td>
+                                <td>{{x.YearTitle_Ar}}</td>
+                                <td>
+                                    <div class="btn btn-primary" ng-class="{
+                                                                    'spinner-wave'
+                                                                            : deleteShiftYearloader[$index] == true}" ng-click="deleteShift(x, $index)"><span ng-if="!deleteShiftYearloader[$index]" class="ng-scope"><i class="fa fa-save"></i> Delete</span>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn btn-primary" ng-click="updateShiftYear(x, $index)"> Update</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div ng-if="$root.shiftYearLoading" style="width: 100px; margin: auto;">
+                    <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

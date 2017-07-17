@@ -1561,6 +1561,13 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
     $scope.saveBtnShow = true;
     $scope.isDataLoading = true;
     $scope.deleteloaderr = [];
+
+
+    $scope.showBranchAvailableTab = function () {
+        console.log('showBranchAvailableTab');
+        $("#branchAvailableServicesTab").show();
+    };
+
     Branch.getAll().success(function (res) {
         console.log("res", res)
         $scope.allBranches = res;
@@ -1630,6 +1637,7 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
         $scope.showgrid = false;
         $scope.saveBtnShow = false;
         $scope.updateBtnShow = true;
+        $('#mainInfoFormDiv').show();
     }
 
     $scope.update = function () {
@@ -1660,11 +1668,20 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
     }
 })
 
-app.controller('BranchAvailableSeviceCtrl', function ($scope, $rootScope, Branch, User) {
+app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope, Branch, User) {
     console.log("all branch available ctrl")
     $scope.final_obj = {};
     $scope.isDataLoading = true;
     $scope.allServices = [];
+
+//    for setting branch id in the input field dynamically
+//    if ($rootScope.availableServiceObj != null) {
+//        console.log('if', $rootScope.availableServiceObj);
+//    } else {
+//        console.log('else', $rootScope.availableServiceObj);
+    $scope.final_obj.Id = $rootScope.branchId;
+//    }
+    console.log('The Selected Branch', $rootScope.branchId);
     User.getServices().success(function (res) {
         for (var i = 0; i < res.length; i++) {
             res[i].checked = false;
@@ -1676,33 +1693,34 @@ app.controller('BranchAvailableSeviceCtrl', function ($scope, $rootScope, Branch
             .error(function (err) {
                 console.log(err)
                 $scope.isDataLoading = false;
-            })
+            });
 
+    /*
+     //
+     //        Branch.availableService($rootScope.branchId).success(function (res) {
+     //        if (res.length > 0) {
+     //            console.log("Available Service in Selected Branch is Exist", res);
+     //            for (var i = 0; i < res.length; i++) {
+     //                for (var j = 0; j < res.length; j++) {
+     //                    if ($scope.allServices[i].Id === res[j].Id) {
+     //                        $scope.allServices[i].checked = true;
+     //                    }
+     //                }
+     //            }
+     //            $scope.isDataLoading = false;
+     //        } else {
+     //            console.log("No Available Service in Selected Branch is Exist", res);
+     //        }
+     //    })
+     //            .error(function (err) {
+     //                $scope.isDataLoading = false;
+     //            })
+     */
 
-    $scope.change = function () {
-        $scope.isDataLoading = true;
-        for (var i = 0; i < $scope.allServices.length; i++) {
-            $scope.allServices[i].checked = false;
-        }
-
-        Branch.availableService($scope.final_obj.branchId).success(function (res) {
-            console.log("Res", res);
-            for (var i = 0; i < $scope.allServices.length; i++) {
-                for (var j = 0; j < res.length; j++) {
-                    if ($scope.allServices[i].Id == res[j].Id) {
-                        $scope.allServices[i].checked = true;
-                    }
-                }
-            }
-            $scope.isDataLoading = false;
-        })
-                .error(function (err) {
-                    $scope.isDataLoading = false;
-                })
-    }
 
     $scope.loaderr = false;
-    $scope.updateServices = function () {
+    $scope.updateAvailableServices = function () {
+        console.log("Saving Available Service");
         var final_Services = [];
 
         for (var i = 0; i < $scope.allServices.length; i++) {
@@ -1711,19 +1729,41 @@ app.controller('BranchAvailableSeviceCtrl', function ($scope, $rootScope, Branch
             }
         }
         $scope.loaderr = true;
-        Branch.updateWorkingDay(final_Services, $scope.final_obj.branchId).success(function (res) {
-//            alert("Success fully updated services");
-            $scope.loaderr = false;
-        })
-                .error(function (err) {
-                    alert("There is some server error in updating services");
-                    $scope.loaderr = false;
-                })
+
+//        updating form
+        var params = "grant_type=client_credentials&client_id=Android01&client_secret=21B5F798-BE55-42BC-8AA8-0025B903DC3B&scope=app1";
+        var url = "http://autotecauth.azurewebsites.net/identity/connect/token";
+        $http.post(url, params, {
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+        }).success(function (result) {
+            $http.post('http://autotecapi.azurewebsites.net/api/branch/' + $rootScope.branchId + '/services ', final_Services, {
+                headers: {
+                    'Authorization': "Bearer" + " " + result.access_token
+                }
+            }).success(function (res) {
+                console.log('scucessfully saved');
+                $scope.loaderr = false;
+                $window.location.reload();
+            })
+                    .error(function (err) {
+                        console.log('error in saving');
+                        $scope.loaderr = false;
+                    });
+
+        });
+
+//        Branch.updateWorkingDay(final_Services, $scope.final_obj.branchId).success(function (res) {
+////            alert("Success fully updated services");
+//            $scope.loaderr = false;
+//        })
+//                .error(function (err) {
+//                    alert("There is some server error in updating services");
+//                    $scope.loaderr = false;
+//                });
     }
+});
 
-})
-
-app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter) {
+app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter, Appointment) {
     $scope.final_obj = {};
     $scope.dateObj = {};
     $scope.saveBtnShow = true;
@@ -1733,15 +1773,9 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter)
     $scope.addShftYear = function () {
 
         try {
-//            $scope.final_obj.YearStartDate = $scope.dateObj.YearStartDate.toISOString().split('T')[0]
-//            $scope.final_obj.YearEndDate = $scope.dateObj.YearEndDate.toISOString().split('T')[0]
+
             $scope.final_obj.YearStartDate = $filter("date")($scope.dateObj.YearStartDate, 'yyyy-MM-dd');
             $scope.final_obj.YearEndDate = $filter("date")($scope.dateObj.YearEndDate, 'yyyy-MM-dd');
-
-//            $scope.final_obj.YearStartDate = $scope.dateObj.YearStartDate.toISOString().split('T')[0]
-//            $scope.final_obj.YearEndDate = $scope.dateObj.YearEndDate.toISOString().split('T')[0]
-
-            console.log($scope.final_obj)
             $scope.loaderr = true;
             Branch.addShiftYears($scope.final_obj).success(function (res) {
                 console.log("res", res);
@@ -1864,22 +1898,20 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter)
     $scope.SaveShiftloader = false;
 
     $scope.addBranchShift = function () {
-        console.log($scope.timeObj);
 
-        // var formatedStartTime = $filter("date")($scope.branchShiftStartTime, 'h:mm a');
-        // var formatedEndTime = $filter("date")($scope.branchShiftEndTime, 'h:mm a');
-        //var ampm = (parseInt($scope.timeObj.ShiftStartTime.toISOString().split('T')[1].split(':')[0])) >= 12 ? 'PM' : 'AM'
-        $scope.addShiftObj.ShiftStartTime = $filter("date")($scope.timeObj.ShiftStartTime, 'h:mm a');
+        $scope.addShiftObj.BranchId = $rootScope.branchId;
         $scope.addShiftObj.ShiftEndTime = $filter("date")($scope.timeObj.ShiftEndTime, 'h:mm a');
-        console.log($scope.addShiftObj)
+        $scope.addShiftObj.ShiftStartTime = $filter("date")($scope.timeObj.ShiftStartTime, 'h:mm a');
+
         $scope.SaveShiftloader = true;
         Branch.addBranchShifts($scope.addShiftObj).success(function (res) {
+            console.log("Form is saved successfully");
             $scope.SaveShiftloader = false;
             $scope.addShiftObj = {};
             $scope.timeObj = {};
-//            alert("successfuly added branch shift");
         })
                 .error(function (err) {
+                    console.log("Error in saving Form");
                     $scope.SaveShiftloader = false;
                 })
     }
@@ -1928,7 +1960,7 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter)
     }
 })
 
-app.controller('BranchWorkingCtrl', function ($scope, Branch) {
+app.controller('BranchWorkingCtrl', function ($scope, $rootScope, Branch) {
     $scope.final_obj = {};
     $scope.days = [{
             checked: false,
@@ -1954,29 +1986,31 @@ app.controller('BranchWorkingCtrl', function ($scope, Branch) {
         }]
 
     $scope.isDataLoading = false;
-    $scope.change = function () {
-        $scope.isDataLoading = true;
-        for (var i = 0; i < $scope.days.length; i++) {
-            $scope.days[i].checked = false;
-        }
-        Branch.getWorkingDays($scope.final_obj.branchId).success(function (res) {
-            console.log("res", res, $scope.days);
-            for (var i = 0; i < $scope.days.length; i++) {
 
-                for (var j = 0; j < res.length; j++) {
-                    if (res[j] == $scope.days[i].value) {
-                        console.log("in if");
-                        $scope.days[i].checked = true;
-                    }
-                }
-
-            }
-            $scope.isDataLoading = false;
-        })
-                .error(function (err) {
-                    $scope.isDataLoading = false;
-                })
-    }
+//    not required now
+//    $scope.change = function () {
+//        $scope.isDataLoading = true;
+//        for (var i = 0; i < $scope.days.length; i++) {
+//            $scope.days[i].checked = false;
+//        }
+//        Branch.getWorkingDays($rootScope.branchId).success(function (res) {
+//            console.log("res", res, $scope.days);
+//            for (var i = 0; i < $scope.days.length; i++) {
+//
+//                for (var j = 0; j < res.length; j++) {
+//                    if (res[j] == $scope.days[i].value) {
+//                        console.log("in if");
+//                        $scope.days[i].checked = true;
+//                    }
+//                }
+//
+//            }
+//            $scope.isDataLoading = false;
+//        })
+//                .error(function (err) {
+//                    $scope.isDataLoading = false;
+//                })
+//    }
 
     $scope.loaderr1 = false;
     $scope.updateWorkingDay = function () {
@@ -1988,26 +2022,34 @@ app.controller('BranchWorkingCtrl', function ($scope, Branch) {
             }
         }
         $scope.loaderr1 = true;
-        Branch.updateWorkingDay(final_Days, $scope.final_obj.branchId).success(function (res) {
-            alert("Success fully updated working days");
+        Branch.updateWorkingDay(final_Days, $rootScope.branchId).success(function (res) {
+            alert("Successfully updated working days");
             $scope.loaderr1 = false;
         })
                 .error(function (err) {
+                    console.log("Failed to update working days");
                     $scope.loaderr1 = false;
-                })
+                });
     }
 
-    // $scope.change = function(index) {
-    //     console.log("index", index)
-    //     $scope.days[index].checked = !$scope.days[index].checked;
-    // }
-})
+});
 
 
 app.controller('BranchSetupCtrl', function ($scope, Branch, $rootScope) {
 
     $rootScope.shiftYearLoading = true;
     $rootScope.deleteShiftYearloader = [];
+
+    $scope.showMainBranchInfoForm = function () {
+        console.log('show form');
+        $('#mainInfoFormDiv').show();
+//        $scope.final_obj.BranchName = "";
+//        $scope.final_obj.BranchNameInArabic = "";
+//        $scope.final_obj.Address = null;
+//        $scope.final_obj.Longitude = $scope.final_obj.Latitude = 0;
+
+    };
+
     Branch.getShiftYears().success(function (res) {
         console.log("shift years", res);
         $rootScope.ShiftYears = res;
@@ -2038,7 +2080,7 @@ app.controller('BranchSetupCtrl', function ($scope, Branch, $rootScope) {
     // .error(function(err) {
 
     // })
-})
+});
 
 // app.controller('BranchSetupCtrl', function($scope, User, $http, $window, $filter, $rootScope) {
 //     $scope.branchNameEn = "";
@@ -2939,14 +2981,14 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
             }).success(function (res) {
                 console.log('scucessfully saved');
 
-                    $scope.loaderr = false;
+                $scope.loaderr = false;
 //                    $scope.showSuccessAlert = true;
 //                    $scope.isDataLoading = false;
 //                    $window.location.reload();
             })
                     .error(function (err) {
                         console.log('error in saving');
-                            $scope.loaderr = false;
+                        $scope.loaderr = false;
 //                            $scope.errorText = err.Message;
 //                            $scope.showErrorAlert = true;
 //                            console.log(err)
@@ -3008,7 +3050,7 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
 //                    $window.location.reload();
                 })
                         .error(function (err) {
-                             console.log('error in saving');
+                            console.log('error in saving');
                             $scope.loaderr = false;
 //                            $scope.errorText = err.Message;
 //                            $scope.showErrorAlert = true;
@@ -3139,253 +3181,253 @@ app.controller('AppointCalenderCtrl', function ($scope, Appointment, $filter, $h
 
 })
 
-app.controller('CalendarCtrl',function($scope,$compile,uiCalendarConfig, $filter, localStorageService, $rootScope, Appointment) {
+app.controller('CalendarCtrl', function ($scope, $compile, uiCalendarConfig, $filter, localStorageService, $rootScope, Appointment) {
     var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
-    
+
     $scope.changeTo = 'Hungarian';
     /* event source that pulls from google.com */
     $scope.eventSource = {
-            url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
-            className: 'gcal-event',           // an option!
-            currentTimezone: 'America/Chicago' // an option!
+        url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
+        className: 'gcal-event', // an option!
+        currentTimezone: 'America/Chicago' // an option!
     };
     /* event source that contains custom events on the scope */
     $scope.events = [
     ];
     /* event source that calls a function on every view switch */
     $scope.eventsF = function (start, end, timezone, callback) {
-      var s = new Date(start).getTime() / 1000;
-      var e = new Date(end).getTime() / 1000;
-      var m = new Date(start).getMonth();
-      var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
-      callback(events);
+        var s = new Date(start).getTime() / 1000;
+        var e = new Date(end).getTime() / 1000;
+        var m = new Date(start).getMonth();
+        var events = [{title: 'Feed Me ' + m, start: s + (50000), end: s + (100000), allDay: false, className: ['customFeed']}];
+        callback(events);
     };
- 
-    var dateObj  = localStorageService.get("DateObj");
- 
+
+    var dateObj = localStorageService.get("DateObj");
+
     $scope.calEventsExt = {
-       color: '#f00',
-       textColor: 'yellow',
-       events: [ 
-          {type:'party',title: 'Lunch',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-          {type:'party',title: 'Lunch 2',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-          {type:'party',title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
+        color: '#f00',
+        textColor: 'yellow',
+        events: [
+            {type: 'party', title: 'Lunch', start: new Date(y, m, d, 12, 0), end: new Date(y, m, d, 14, 0), allDay: false},
+            {type: 'party', title: 'Lunch 2', start: new Date(y, m, d, 12, 0), end: new Date(y, m, d, 14, 0), allDay: false},
+            {type: 'party', title: 'Click for Google', start: new Date(y, m, 28), end: new Date(y, m, 29), url: 'http://google.com/'}
         ]
     };
     /* alert on eventClick */
-    $scope.alertOnEventClick = function( date, jsEvent, view){
+    $scope.alertOnEventClick = function (date, jsEvent, view) {
         $scope.alertMessage = (date.title + ' was clicked ');
     };
     /* alert on Drop */
-     $scope.alertOnDrop = function(event, delta, revertFunc, jsEvent, ui, view){
-       $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
+    $scope.alertOnDrop = function (event, delta, revertFunc, jsEvent, ui, view) {
+        $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
     };
     /* alert on Resize */
-    $scope.alertOnResize = function(event, delta, revertFunc, jsEvent, ui, view ){
-       $scope.alertMessage = ('Event Resized to make dayDelta ' + delta);
+    $scope.alertOnResize = function (event, delta, revertFunc, jsEvent, ui, view) {
+        $scope.alertMessage = ('Event Resized to make dayDelta ' + delta);
     };
     /* add and removes an event source of choice */
-    $scope.addRemoveEventSource = function(sources,source) {
-      var canAdd = 0;
-      angular.forEach(sources,function(value, key){
-        if(sources[key] === source){
-          sources.splice(key,1);
-          canAdd = 1;
+    $scope.addRemoveEventSource = function (sources, source) {
+        var canAdd = 0;
+        angular.forEach(sources, function (value, key) {
+            if (sources[key] === source) {
+                sources.splice(key, 1);
+                canAdd = 1;
+            }
+        });
+        if (canAdd === 0) {
+            sources.push(source);
         }
-      });
-      if(canAdd === 0){
-        sources.push(source);
-      }
     };
     /* add custom event*/
-    $scope.addEvent = function() {
-      $scope.events.push({
-        title: 'Open Sesame',
-        start: new Date(y, m, 28),
-        end: new Date(y, m, 29),
-        className: ['openSesame']
-      });
+    $scope.addEvent = function () {
+        $scope.events.push({
+            title: 'Open Sesame',
+            start: new Date(y, m, 28),
+            end: new Date(y, m, 29),
+            className: ['openSesame']
+        });
     };
     /* remove event */
-    $scope.remove = function(index) {
-      $scope.events.splice(index,1);
+    $scope.remove = function (index) {
+        $scope.events.splice(index, 1);
     };
     /* Change View */
-    $scope.changeView = function(view,calendar) {
-      uiCalendarConfig.calendars[calendar].fullCalendar('changeView',view);
+    $scope.changeView = function (view, calendar) {
+        uiCalendarConfig.calendars[calendar].fullCalendar('changeView', view);
     };
     /* Change View */
-    $scope.renderCalender = function(calendar) {
-      if(uiCalendarConfig.calendars[calendar]){
-        uiCalendarConfig.calendars[calendar].fullCalendar('render');
-      }
+    $scope.renderCalender = function (calendar) {
+        if (uiCalendarConfig.calendars[calendar]) {
+            uiCalendarConfig.calendars[calendar].fullCalendar('render');
+        }
     };
-     /* Render Tooltip */
-    $scope.eventRender = function( event, element, view ) { 
+    /* Render Tooltip */
+    $scope.eventRender = function (event, element, view) {
         element.attr({'tooltip': event.title,
-                     'tooltip-append-to-body': true});
+            'tooltip-append-to-body': true});
         $compile(element)($scope);
     };
- 
-      $rootScope.$on('DateChangeEvent', function(ev, args) {
-            console.log("Args", args);
-                /* config object */
-            $scope.uiConfig = {
-              calendar:{
+
+    $rootScope.$on('DateChangeEvent', function (ev, args) {
+        console.log("Args", args);
+        /* config object */
+        $scope.uiConfig = {
+            calendar: {
                 height: 450,
                 editable: true,
-                header:{
-                 left:'',
-                  center: 'title',
-                  right: 'today prev,next'
+                header: {
+                    left: '',
+                    center: 'title',
+                    right: 'today prev,next'
                 },
-                defaultView: ( args.selectedView == "1" ? 'basicDay' :  (args.selectedView == "7" ? 'basicWeek' : 'month') ) || 'month',
-                defaultDate: typeof args.startDate == "undefined" ? new Date()  : new Date(args.startDate) ,
+                defaultView: (args.selectedView == "1" ? 'basicDay' : (args.selectedView == "7" ? 'basicWeek' : 'month')) || 'month',
+                defaultDate: typeof args.startDate == "undefined" ? new Date() : new Date(args.startDate),
                 gotoDate: new Date(args.startDate),
                 eventClick: $scope.alertOnEventClick,
                 eventDrop: $scope.alertOnDrop,
                 eventResize: $scope.alertOnResize,
                 eventRender: $scope.eventRender
-              }
-            };
-            $rootScope.$broadcast('InitializeCalender', {});
-           
- /* event source that contains custom events on the scope */
-   
+            }
+        };
+        $rootScope.$broadcast('InitializeCalender', {});
+
+        /* event source that contains custom events on the scope */
+
         var startDate = $filter("date")(new Date(args.startDate), 'yyyy-MM-dd');
         var endDate = $filter("date")((new Date(args.endDate)), 'yyyy-MM-dd');
-        Appointment.getAppointmentStartDate(startDate, endDate).success(function(res) {
-            console.log("succeesss1",res)
-             //$scope.events = [];
+        Appointment.getAppointmentStartDate(startDate, endDate).success(function (res) {
+            console.log("succeesss1", res)
+            //$scope.events = [];
             var tempLength = $scope.events.length;
             // console.log("temp length", tempLength)
             if ($scope.events.length > 0) {
                 // console.log("in if");
                 // $scope.events = []; 
-                for (var j=0; j< tempLength; j++) {
-                    $scope.events.splice(0,1);
+                for (var j = 0; j < tempLength; j++) {
+                    $scope.events.splice(0, 1);
                 }
-                
+
             }
             // console.log("argss", $scope.events)
             var eventObj = [];
             var Dates;
-            
+
             for (var i = 0; i < res.length; i++) {
-                Dates= $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
+                Dates = $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
                 if (eventObj.hasOwnProperty(Dates)) {
                     eventObj[Dates]++;
-                }else{
+                } else {
                     eventObj[Dates] = 1;
                 }
             }
             // console.log("eventObj", eventObj)
             // console.log("eventObj lenght", eventObj.length)
             if (args.selectedView == "7" || args.selectedView == "30") {
-                for(key in eventObj){
+                for (key in eventObj) {
                     // console.log("key "+ key + ", value "+eventObj[key])
-                    $scope.events.push({title: 'Appointment : '+eventObj[key], start: new Date(key)})
+                    $scope.events.push({title: 'Appointment : ' + eventObj[key], start: new Date(key)})
                 }
-            }else{
- 
- 
+            } else {
+
+
                 for (var i = 0; i < res.length; i++) {
                     $scope.events.push({
-                        title: res[i].CustomerName+' '+$filter("date")(res[i].AppointmentStartTime, 'h:m:a')+' '+$filter("date")(res[i].AppointmentEndTime, 'h:m:a'), 
-                        start: new Date(res[i].AppointmentStartTime), 
+                        title: res[i].CustomerName + ' ' + $filter("date")(res[i].AppointmentStartTime, 'h:m:a') + ' ' + $filter("date")(res[i].AppointmentEndTime, 'h:m:a'),
+                        start: new Date(res[i].AppointmentStartTime),
                         end: new Date(res[i].AppointmentEndTime)})
                 }
- 
+
             }
-            
-             // console.log("argss", $scope.events)
-                 /* event sources array*/
-    $scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];
-    $scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
+
+            // console.log("argss", $scope.events)
+            /* event sources array*/
+            $scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];
+            $scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
         })
-        .error(function(err) {
-            console.log("Err",err)
-        })
-      })
- 
- 
- 
- 
-                  $scope.uiConfig = {
-              calendar:{
-                height: 450,
-                editable: true,
-                header:{
-                 left:'',
-                  center: 'title',
-                  right: 'today prev,next'
-                },
-                defaultView: 'month',
-                defaultDate: new Date(),
-                eventClick: $scope.alertOnEventClick,
-                eventDrop: $scope.alertOnDrop,
-                eventResize: $scope.alertOnResize,
-                eventRender: $scope.eventRender
-              }
-            };
- 
+                .error(function (err) {
+                    console.log("Err", err)
+                })
+    })
+
+
+
+
+    $scope.uiConfig = {
+        calendar: {
+            height: 450,
+            editable: true,
+            header: {
+                left: '',
+                center: 'title',
+                right: 'today prev,next'
+            },
+            defaultView: 'month',
+            defaultDate: new Date(),
+            eventClick: $scope.alertOnEventClick,
+            eventDrop: $scope.alertOnDrop,
+            eventResize: $scope.alertOnResize,
+            eventRender: $scope.eventRender
+        }
+    };
+
 // console.log("$scope.uiConfig", $scope.uiConfig)
-            //$scope.uiConfig.gotoDate(new Date("08-01-2017"))
- 
-        Date.prototype.addDays = function(days) {
+    //$scope.uiConfig.gotoDate(new Date("08-01-2017"))
+
+    Date.prototype.addDays = function (days) {
         var dat = new Date(this.valueOf());
         dat.setDate(dat.getDate() + days);
         return dat;
-        }
- 
-        //var enddate= new Date()
- 
-        var startDate = $filter("date")(new Date(), 'yyyy-MM-dd');
-        var endDate = $filter("date")((new Date()).addDays(30), 'yyyy-MM-dd');
-Appointment.getAppointmentStartDate(startDate, endDate).success(function(res) {
-    console.log("succeesss2",res)
- 
-    var eventObj = [];
-    var Dates;        
-            
-    for (var i = 0; i < res.length; i++) {
-        Dates= $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
-        if (eventObj.hasOwnProperty(Dates)) {
-            eventObj[Dates]++;
-        }else{
-            eventObj[Dates] = 1;
-        }
     }
-    // console.log("eventObj", eventObj)
-    // console.log("eventObj lenght", eventObj.length)
-    // if (args.selectedView == "7" || args.selectedView == "30") {
-        for(key in eventObj){
-            // console.log("key "+ key + ", value "+eventObj[key])
-            $scope.events.push({title: 'Appointments : '+eventObj[key], start: new Date(key)})
+
+    //var enddate= new Date()
+
+    var startDate = $filter("date")(new Date(), 'yyyy-MM-dd');
+    var endDate = $filter("date")((new Date()).addDays(30), 'yyyy-MM-dd');
+    Appointment.getAppointmentStartDate(startDate, endDate).success(function (res) {
+        console.log("succeesss2", res)
+
+        var eventObj = [];
+        var Dates;
+
+        for (var i = 0; i < res.length; i++) {
+            Dates = $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
+            if (eventObj.hasOwnProperty(Dates)) {
+                eventObj[Dates]++;
+            } else {
+                eventObj[Dates] = 1;
+            }
         }
-    // }else{
-    //     for (var i = 0; i < res.length; i++) {
-    //         $scope.events.push({title: res[i].CustomerName, start: new Date(res[i].AppointmentStartTime), end: new Date(res[i].AppointmentEndTime)})
-    //     }
-    // }
-})
-.error(function(err) {
-    console.log("Err",err)
-})
- 
-    $scope.changeLang = function() {
-      if($scope.changeTo === 'Hungarian'){
-        $scope.uiConfig.calendar.dayNames = ["Vasárnap", "Hétfo", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
-        $scope.uiConfig.calendar.dayNamesShort = ["Vas", "Hét", "Kedd", "Sze", "Csüt", "Pén", "Szo"];
-        $scope.changeTo= 'English';
-      } else {
-        $scope.uiConfig.calendar.dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        $scope.uiConfig.calendar.dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        $scope.changeTo = 'Hungarian';
-      }
+        // console.log("eventObj", eventObj)
+        // console.log("eventObj lenght", eventObj.length)
+        // if (args.selectedView == "7" || args.selectedView == "30") {
+        for (key in eventObj) {
+            // console.log("key "+ key + ", value "+eventObj[key])
+            $scope.events.push({title: 'Appointments : ' + eventObj[key], start: new Date(key)})
+        }
+        // }else{
+        //     for (var i = 0; i < res.length; i++) {
+        //         $scope.events.push({title: res[i].CustomerName, start: new Date(res[i].AppointmentStartTime), end: new Date(res[i].AppointmentEndTime)})
+        //     }
+        // }
+    })
+            .error(function (err) {
+                console.log("Err", err)
+            })
+
+    $scope.changeLang = function () {
+        if ($scope.changeTo === 'Hungarian') {
+            $scope.uiConfig.calendar.dayNames = ["Vasárnap", "Hétfo", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
+            $scope.uiConfig.calendar.dayNamesShort = ["Vas", "Hét", "Kedd", "Sze", "Csüt", "Pén", "Szo"];
+            $scope.changeTo = 'English';
+        } else {
+            $scope.uiConfig.calendar.dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            $scope.uiConfig.calendar.dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            $scope.changeTo = 'Hungarian';
+        }
     };
     /* event sources array*/
     $scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];
