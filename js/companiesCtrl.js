@@ -336,12 +336,13 @@ app.controller('companiesCtrl', function($state, $scope, User, $http) {
 
                 if ($scope.addCompany.Email == null || $scope.addCompany.Email == "") {
                     errors.push({ message: 'Email is required' });
-                } else {
-                    var email = $scope.addCompany.Email.match($scope.regex);
-                    if (email == null) {
-                        errors.push({ message: 'Not a valid email' });
-                    }
-                }
+                } 
+                // else {
+                //     var email = $scope.addCompany.Email.match($scope.regex);
+                //     if (email == null) {
+                //         errors.push({ message: 'Not a valid email' });
+                //     }
+                // }
 
                 if ($scope.addCompany.PrimaryContactPerson == null || $scope.addCompany.PrimaryContactPerson == "") {
                     errors.push({ message: 'Primary Contact is required' })
@@ -353,12 +354,13 @@ app.controller('companiesCtrl', function($state, $scope, User, $http) {
 
                 if ($scope.addCompany.PrimaryEmail == null || $scope.addCompany.PrimaryEmail == "") {
                     errors.push({ message: 'Primary Email is required' });
-                } else {
-                    var email = $scope.addCompany.PrimaryEmail.match($scope.regex);
-                    if (email == null) {
-                        errors.push({ message: 'Not a valid primary email' });
-                    }
-                }
+                } 
+                // else {
+                //     var email = $scope.addCompany.PrimaryEmail.match($scope.regex);
+                //     if (email == null) {
+                //         errors.push({ message: 'Not a valid primary email' });
+                //     }
+                // }
 
                 if ($scope.addCompany.PrimaryOtherContact == null || $scope.addCompany.PrimaryOtherContact == "") {
                     errors.push({ message: 'Other Contact Details is required' })
@@ -374,12 +376,13 @@ app.controller('companiesCtrl', function($state, $scope, User, $http) {
 
                 if ($scope.addCompany.SecondaryEmail == null || $scope.addCompany.SecondaryEmail == "") {
                     errors.push({ message: 'Secondary Email is required' });
-                } else {
-                    var email = $scope.addCompany.SecondaryEmail.match($scope.regex);
-                    if (email == null) {
-                        errors.push({ message: 'Not a valid secondary email' });
-                    }
-                }
+                } 
+                // else {
+                //     var email = $scope.addCompany.SecondaryEmail.match($scope.regex);
+                //     if (email == null) {
+                //         errors.push({ message: 'Not a valid secondary email' });
+                //     }
+                // }
 
                 if ($scope.addCompany.OtherContact == null || $scope.addCompany.OtherContact == "") {
                     errors.push({ message: 'Other Contact is required' })

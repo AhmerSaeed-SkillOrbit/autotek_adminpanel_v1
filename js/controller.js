@@ -1022,12 +1022,13 @@ app.controller('addNewAppUser', function ($scope, User, $http) {
 
         if ($scope.addUser.EmailAddress == null || $scope.addUser.EmailAddress == "") {
             errors.push({message: 'Email is required'});
-        } else {
-            var email = $scope.addUser.EmailAddress.match($scope.regex);
-            if (email == null) {
-                errors.push({message: 'Not a valid email'});
-            }
-        }
+        } 
+        // else {
+        //     var email = $scope.addUser.EmailAddress.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({message: 'Not a valid email'});
+        //     }
+        // }
 
         if ($scope.addUser.Password == null || $scope.addUser.Password == "") {
             errors.push({message: 'Password is required'})
@@ -1375,12 +1376,13 @@ app.controller('addNewSalesAgent', function ($state, $scope, User, $http) {
 
         if ($scope.addSalesAgent.Email == null || $scope.addSalesAgent.Email == "") {
             errors.push({message: 'Email is required'});
-        } else {
-            var email = $scope.addSalesAgent.EmailAddress.match($scope.regex);
-            if (email == null) {
-                errors.push({message: 'Not a valid email'});
-            }
-        }
+        } 
+        // else {
+        //     var email = $scope.addSalesAgent.EmailAddress.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({message: 'Not a valid email'});
+        //     }
+        // }
 
         if ($scope.addSalesAgent.companeSelected == null || $scope.addSalesAgent.companeSelected == "") {
             errors.push({message: 'Company is required'})
@@ -1468,7 +1470,7 @@ app.controller('addNewSalesAgent', function ($state, $scope, User, $http) {
                         .error(function (err) {
                             var error = [{message: err.Message}]
                             $scope.loaderr = false
-                            $scope.errorText = err.Message;
+                            $scope.errorText = err;
                             $scope.showErrorAlert = true;
                             // $ionicLoading.hide();
                             // $scope.deactivate(error)
@@ -2664,13 +2666,14 @@ app.controller('SignupCtrl', ['$scope', '$rootScope', '$http', '$state', '$locat
 
             if ($scope.user.EmailAddress == null || $scope.user.EmailAddress == "") {
                 errors.push({message: 'Email is required'});
-            } else {
-                var email = $scope.user.EmailAddress.match($scope.regex);
-                if (email == null) {
-                    console.log("Error-4a");
-                    errors.push({message: 'Not a valid email'});
-                }
-            }
+            } 
+            // else {
+            //     var email = $scope.user.EmailAddress.match($scope.regex);
+            //     if (email == null) {
+            //         console.log("Error-4a");
+            //         errors.push({message: 'Not a valid email'});
+            //     }
+            // }
 
             // if ($scope.user.LastName == null || $scope.user.LastName == "") {
             //     errors.push({ message: 'Last Name is required' })
