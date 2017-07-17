@@ -1,0 +1,16 @@
+{
+  "name": "autotekux",
+  "version": "1.1.0",
+  "devDependencies": {
+    "lite-server": "^2.2.2"
+  },
+  "scripts": {
+    "lite": "lite-server",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "angular-datepicker": "^1.0.5",
+    "angular-strap": "^2.3.12",
+    "angularjs-datepicker": "^2.1.23"
+  }
+}

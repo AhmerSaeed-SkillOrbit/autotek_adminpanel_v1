@@ -1,0 +1,526 @@
+<header-bar-supreme-english></header-bar-supreme-english>
+<left-side-bar-english></left-side-bar-english>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Branch Setup 
+            <!-- <small>Add mobile app user profile</small> -->
+        </h1>
+        <ol class="breadcrumb">
+            <li><a><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Branch Setup</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="alert alert-success" ng-show="showSuccessAlert">
+                    <button type="button" class="close" data-ng-click="switchBool('showSuccessAlert')">×</button>
+                    <strong>Branch added Sucessfully</strong>
+                </div>
+                <div class="alert alert-danger" ng-show="showSuccessAlertDelete">
+                    <button type="button" class="close" data-ng-click="switchBool('showSuccessAlertDelete')">×</button>
+                    <strong>Branch deleted successfuly</strong>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li style="cursor: pointer;" ng-class="{
+                            'active'
+                                    :$root.branchtabs[0]}"><a ng-click="tabclick(0)" data-toggle="tab">Main info</a></li>
+                    <li style="cursor: pointer;" ng-class="{
+                            'active'
+                                    :$root.branchtabs[1]}"><a ng-click="tabclick(1)" data-toggle="tab">Available Services</a></li>
+                    <li style="cursor: pointer;" ng-class="{
+                            'active'
+                                    :$root.branchtabs[3]}"><a ng-click="tabclick(3)" data-toggle="tab">Working Days</a></li>
+                    <li style="cursor: pointer;" ng-class="{
+                            'active'
+                                    :$root.branchtabs[2]}"><a ng-click="tabclick(2)" data-toggle="tab">Shifts</a></li>
+
+                </ul>
+                <div class="tab-content" ng-class="{
+                        'inactive-tabs'
+                                : !$root.branchtabs[0] }" ng-controller="BranchMainInfo">
+                    <div class="tab-pane" ng-class="{
+                            'active'
+                                    : $root.branchtabs[0]}" id="branchform1">
+                        <div class="form-horizontal">
+                            <div class="row form-group">
+                                <label for="inputName" class="col-sm-2 control-label">Name (English)</label>
+                                <div class="col-sm-4">
+                                    <input type="text" ng-model="final_obj.BranchName" class="form-control" placeholder="Name (English)" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="inputName" class="col-sm-2 control-label">Name (Arabic)</label>
+                                <div class="col-sm-4">
+                                    <input type="text" ng-model="final_obj.BranchNameInArabic" class="form-control" placeholder="Name (Arabic)" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="inputName" class="col-sm-2 control-label">Address</label>
+                                <div class="col-sm-4">
+                                    <textarea rows="4" class="form-control" ng-model="final_obj.Address" placeholder="Address" autocomplete="off"></textarea>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="inputName" class="col-sm-2 control-label">GPS (Longitude)</label>
+                                <div class="col-sm-4">
+                                    <input type="text" id="longitude" class="form-control" ng-model="final_obj.Longitude" autocomplete="off" gps-masklongitude>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="inputName" class="col-sm-2 control-label">GPS (Latitude)</label>
+                                <div class="col-sm-4">
+                                    <input type="text" id="latitude" class="form-control" ng-model="final_obj.Latitude" gps-masklatitude>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="inputName" class="col-sm-2 control-label">City</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" ng-model="final_obj.CityId">
+                                        <option ng-repeat="Cities in allCities" value="{{Cities.CityId}}" ng-selected="Cities.CityId == final_obj.CityId">{{Cities.CityName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-4">
+                                    <div class="btn btn-primary" ng-class="{
+                                            'spinner-wave'
+                                                    : loaderr == true}" ng-click="addBranch()" ng-show="saveBtnShow">
+                                        <!-- ngIf: !loaderr --><span ng-if="!loaderr" class="ng-scope"> <i class="fa fa-save"></i> Save</span>
+                                        <!-- end ngIf: !loaderr -->
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="btn btn-primary" ng-class="{
+                                            'spinner-wave'
+                                                    : loaderr == true}" ng-click="update()" ng-show="updateBtnShow">
+                                        <!-- ngIf: !loaderr --><span ng-if="!loaderr" class="ng-scope"> <i class="fa fa-save"></i> Update</span>
+                                        <!-- end ngIf: !loaderr -->
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <table class="table table-bordered table-hover dataTable" ng-if="showgrid">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-gray-light sorting">Branch Name</th>
+                                        <th class="bg-gray-light sorting">Address</th>
+                                        <th class="bg-gray-light sorting">Longitude</th>
+                                        <th class="bg-gray-light sorting">Latitude</th>
+                                        <th class="bg-gray-light sorting">City Name</th>
+                                        <th class="bg-gray-light sorting">Update Action</th>
+                                        <th class="bg-gray-light sorting">Delete Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in allBranches">
+                                        <td>{{x.BranchName}}</td>
+                                        <td>{{x.Address}}</td>
+                                        <td>{{x.Longitude}}</td>
+                                        <td>{{x.Latitude}}</td>
+                                        <td>{{x.CityName}}</td>
+                                        <td>
+                                            <div class="btn btn-primary" ng-click="updataBranch(x, $index)">Update</div>
+                                        </td>
+                                        <td>
+                                            <div class="btn btn-primary" ng-class="{
+                                                    'spinner-wave'
+                                                            : deleteloaderr[$index] == true}" ng-click="deleteBranch(x, $index)">
+                                                <!-- ngIf: !loaderr --><span ng-if="!deleteloaderr[$index]" class="ng-scope"> <i class="fa fa-save"></i> Delete</span>
+                                                <!-- end ngIf: !loaderr -->
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
+                                <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" ng-class="{
+                        'inactive-tabs'
+                                :!$root.branchtabs[1]}" ng-controller="BranchAvailableSeviceCtrl">
+                    <div class="tab-pane" ng-class="{
+                            'active'
+                                    : $root.branchtabs[1], 'inactive-tabs':!$root.branchtabs[1]}" id="branchform2">
+                        <div class="form-horizontal">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row form-group">
+                                    <label for="inputName" class="col-sm-4 control-label">Select Branch</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" ng-model="final_obj.branchId" ng-change="change(final_obj.branchId)">
+                                            <option ng-repeat="x in $root.allBranches" value="{{x.Id}}" ng-selected="x.Id == final_obj.branchId">{{x.BranchName}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <table class="table table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg-gray-light sorting">Select</th>
+                                            <th class="bg-gray-light sorting">Service Title</th>
+                                            <th class="bg-gray-light sorting">Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-if="!isDataLoading">
+                                        <tr ng-repeat="x in allServices">
+                                            <td>
+                                                <input type="checkbox" ng-model="x.checked">
+                                            </td>
+                                            <td>{{x.Title_Eng}}</td>
+                                            <td>{{x.DurationInMin}} minutes</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
+                                    <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="btn btn-primary pull-right" ng-class="{
+                                        'spinner-wave'
+                                                : loaderr == true}" ng-click="updateServices()">
+                                    <!-- ngIf: !loaderr --><span ng-if="!loaderr" class="ng-scope"> <i class="fa fa-save"></i> Save</span>
+                                    <!-- end ngIf: !loaderr -->
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" ng-class="{
+                        'inactive-tabs'
+                                :!$root.branchtabs[2]}" ng-controller="BranchShitfCtrl">
+                    <div class="tab-pane" ng-class="{
+                            'active'
+                                    : $root.branchtabs[2]}" id="branchform2">
+                        <div class="alert alert-success" ng-show="showSuccessAlert">
+                            <button type="button" class="close" data-ng-click="switchBool('showSuccessAlert')">×</button>
+                            <strong>Shift Year added successfuly</strong>
+                        </div>
+                        <div class="alert alert-danger" ng-show="showSuccessAlertDelete">
+                            <button type="button" class="close" data-ng-click="switchBool('showSuccessAlertDelete')">×</button>
+                            <strong>Shift Year deleted successfuly</strong>
+                        </div>
+                        <div class="form-horizontal">
+                            <legend>Shift Basic Info</legend>
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <label for="inputName" class="control-label">Year Title (English)</label>
+                                        <div class="input-group" style="">
+                                            <input type="text" ng-model="final_obj.YearTitle_En" class="form-control" autocomplete="off" style="width: 522px;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inputName" class="control-label">Year Title (Arabic)</label>
+                                        <div class="input-group" style="">
+                                            <input type="text" ng-model="final_obj.YearTitle_Ar" class="form-control" autocomplete="off" style="width: 522px;">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <br><label for="inputName" class="control-label">Start Date</label>
+                                        <div class="input-group" style="">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="date" ng-model="dateObj.YearStartDate" class="form-control datepicker" autocomplete="off">
+                                        </div>
+                                    </div>  
+                                    <div class="col-md-6">
+                                        <br><label for="inputName" class="control-label">End Date</label>
+                                        <div class="input-group" style="">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="date" ng-model="dateObj.YearEndDate" class="form-control datepicker" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div><br>
+                                            <div class="btn btn-primary" ng-show="saveBtnShow" ng-class="{
+                                                    'spinner-wave'
+                                                            : loaderr == true}" ng-click="addShftYear()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Save</span>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                            <div class="btn btn-primary" ng-show="updateBtnShow" ng-class="{
+                                                    'spinner-wave'
+                                                            : loaderr == true}" ng-click="update()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Update</span>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div ng-if="showgrid">
+                                            <br><table class="table table-bordered table-hover dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="bg-gray-light sorting">Start Date</th>
+                                                        <th class="bg-gray-light sorting">End Date</th>
+                                                        <th class="bg-gray-light sorting">Year Title (English)</th>
+                                                        <th class="bg-gray-light sorting">Year Title (Arabic)</th>
+                                                        <th class="bg-gray-light sorting">Delete Action</th>
+                                                        <th class="bg-gray-light sorting">Update Action</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="x in ShiftYears">
+                                                        <td>{{x.YearStartDate| date:'MM/dd/yyyy'}}</td>
+                                                        <td>{{x.YearEndDate| date:'MM/dd/yyyy'}}</td>
+                                                        <td>{{x.YearTitle_En}}</td>
+                                                        <td>{{x.YearTitle_Ar}}</td>
+                                                        <td>
+                                                            <div class="btn btn-primary" ng-class="{
+                                                                    'spinner-wave'
+                                                                            : deleteShiftYearloader[$index] == true}" ng-click="deleteShift(x, $index)"><span ng-if="!deleteShiftYearloader[$index]" class="ng-scope"><i class="fa fa-save"></i> Delete</span>
+                                                                <div></div>
+                                                                <div></div>
+                                                                <div></div>
+                                                                <div></div>
+                                                                <div></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn btn-primary" ng-click="updateShiftYear(x, $index)"> Update</div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div ng-if="$root.shiftYearLoading" style="width: 100px; margin: auto;">
+                                            <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-horizontal" style="">
+                            <legend>Shift Details</legend>
+                            <div class="col-md-12">
+                                <div class="row form-group">
+                                    <div class="col-md-6">
+                                        <label for="inputName" class="control-label">Select Shift</label>
+                                        <select class="form-control" ng-model="addShiftObj.ShiftYearId">
+                                            <option ng-repeat="x in $root.ShiftYears" value="{{x.Id}}" ng-selected="x.Id == addShiftObj.ShifttYearId"> {{x.YearTitle_En}}</option>
+                                        </select>
+                                    </div>                                        
+                                    <div class="col-md-6">
+                                        <label for="inputName" class="control-label">Branches</label>
+                                        <select class="form-control" ng-model="addShiftObj.BranchId">
+                                            <option ng-repeat="x in $root.allBranches" value="{{x.Id}}" ng-selected="x.Id == addShiftObj.BranchId">{{x.BranchName}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <br><label for="inputName" class="control-label">Shifts Title(Eng)</label>
+                                        <input type="text" ng-model="addShiftObj.ShiftTitle_En" id="startTime" class="form-control">
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <br><label for="inputName" class="control-label">Shifts Title(Ar)</label>
+                                        <input type="text" ng-model="addShiftObj.ShiftTitle_Ar" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <br><label for="inputName" class="control-label">Start Time</label>
+                                        <input type="time" ng-model="timeObj.ShiftStartTime" id="startTime" class="form-control" placeholder="HH:MM:SS a" autocomplete="off">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <br><label for="inputName" class="control-label">End Time</label>
+                                        <input type="time" ng-model="timeObj.ShiftEndTime" id="endTime" class="form-control" placeholder="HH:MM:SS a" autocomplete="off">
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <br>
+                                        <div class="btn btn-primary" ng-show="saveShiftButton" ng-class="{
+                                                'spinner-wave'
+                                                        : SaveShiftloader == true}" ng-click="addBranchShift()"><span ng-if="!SaveShiftloader" class="ng-scope"><i class="fa fa-save"></i></span> Save
+                                        </div>
+                                        <div class="btn btn-primary" ng-show="updateShiftButton" ng-class="{
+                                                'spinner-wave'
+                                                        : SaveShiftloader == true}" ng-click="updateShift()"><span ng-if="!SaveShiftloader" class="ng-scope"><i class="fa fa-save"></i>Update</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                   
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label for="inputName" class="control-label">Shifts</label>
+                                    <div class="form-group">
+                                        <select class="form-control" ng-model="brShiftObj.shiftId">
+                                            <option ng-repeat="x in $root.ShiftYears" value="{{x.Id}}"> {{x.YearTitle_En}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="inputName" class="control-label">Branch</label>
+                                    <div class="form-group">
+                                        <select class="form-control" ng-model="brShiftObj.branchId" ng-change="change(final_obj.branchId)">
+                                            <option ng-repeat="x in $root.allBranches" value="{{x.Id}}" ng-selected="x.Id == final_obj.branchId">{{x.BranchName}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="btn btn-primary" ng-click="getBranchShifts()"> Get Branch Shifts </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="showShiftGrid">
+                        <table class="table table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="bg-gray-light sorting">Shift Title(Eng)</th>
+                                    <th class="bg-gray-light sorting">Shift Title(Ar)</th>
+                                    <th class="bg-gray-light sorting">Start Time</th>
+                                    <th class="bg-gray-light sorting">End TIme</th>
+                                    <th class="bg-gray-light sorting">Delete</th>
+                                    <th class="bg-gray-light sorting">Update Action</th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in allBranchShifts" ng-if="!isDataLoading1">
+                                    <td>{{x.ShiftTitle_En}}</td>
+                                    <td>{{x.ShiftTitle_Ar}}</td>
+                                    <td>{{x.ShiftStartTime| date:'h:mm a'}}</td>
+                                    <td>{{x.ShiftEndTime| date:'h:mm a'}}</td>
+                                    <td>
+                                        <div class="btn btn-primary" ng-show="saveBtnShow" ng-class="{
+                                                'spinner-wave'
+                                                        : deleteBranchShiftLoader[$index] == true}" ng-click="deleteBranchShift(x, $index)"><span ng-if="!deleteBranchShiftLoader[$index]" class="ng-scope"><i class="fa fa-save"></i> Delete</span>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn btn-primary" ng-click="updateBranchShift(x)"> Update</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="isBranchShiftLoading" style="width: 100px; margin: auto;">
+                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                    </div>
+                </div>
+                <!--end tab pane-->
+            </div>
+            <div class="tab-content" ng-class="{
+                    'inactive-tabs'
+                            :!$root.branchtabs[3]}" ng-controller="BranchWorkingCtrl">
+                <div class="tab-pane" ng-class="{
+                        'active'
+                                : $root.branchtabs[3]}">
+                    <div class="form-horizontal">
+                        <div class="col-md-6">
+                            <label for="inputName" class="col-md-4 control-label">Select Branch</label>
+                            <div class="form-group col-md-8">
+                                <select class="form-control" ng-model="final_obj.branchId" ng-change="change()">
+                                    <option ng-repeat="x in $root.allBranches" value="{{x.Id}}">{{x.BranchName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4" ng-if="!isDataLoading">
+                            <table class="table table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-gray-light sorting">Select</th>
+                                        <th class="bg-gray-light sorting">Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="list in days">
+                                        <td>
+                                            <input type="checkbox" ng-model="list.checked" />
+                                        </td>
+                                        <td>{{list.value}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
+                            <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-2">
+                            <div class="btn btn-primary pull-right" ng-click="updateWorkingDay()" ng-class="{
+                                    'spinner-wave'
+                                            : loaderr1 == true}"><span ng-if="!loaderr1" class="ng-scope">
+                                    <!-- ngIf: !loaderr --> <i class="fa fa-save"></i> Save</span>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Discard Batch Code</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" name="" placeholder="Ender code here" style="width: 100%;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" close-modal>Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </div>
+</div>
+</section>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<footer-bar-english></footer-bar-english>

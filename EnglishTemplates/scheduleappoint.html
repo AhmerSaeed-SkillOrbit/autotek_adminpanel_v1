@@ -1,0 +1,116 @@
+<header-bar-supreme-english></header-bar-supreme-english>
+<left-side-bar-english></left-side-bar-english>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Schedule Appointment
+            <!-- <small>Add mobile app user profile</small> -->
+        </h1>
+        <ol class="breadcrumb">
+            <li><a><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Schedule Appointment</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="form-horizontal">
+                    <br><br>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label for="inputName" class="col-md-4 control-label">Search Customer</label>
+                                <div class="col-md-8">
+                                    <input type="text" ng-model="finalObj.CustomerId" ng-blur="searchCustomerByNameNMobile()" class="form-control" placeholder="Search Customer" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label for="inputName" class="col-sm-2 control-label">Select City</label>
+                                <div class="col-sm-4">
+                                    <!-- <select class="form-control" ng-model="selectedCity" ng-change="cityChanged();">
+                                        <option ng-repeat="Cities in allCities" value="{{Cities.CityId}}">{{Cities.CityName}}</option>
+                                    </select> -->
+
+                                    <select class="form-control" name="citySelect" ng-options="option.CityName for option in cities.availableOptions track by option.Id" ng-model="cities.selectedOption" ng-change="cityChanged()">
+                                    </select> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label for="inputName" class="col-md-4 control-label">Branch</label>
+
+                                <div class="col-md-8">
+                                    <select class="form-control" ng-model="finalObj.AppointmentSlot.BranchId">
+                                        <option ng-repeat="x in branches.availableOptions" value="{{x.Id}}">{{x.BranchName}}</option>
+                                    </select>
+                                    <!--                                    <select class="form-control" name="branchSelect" ng-options="option.BranchName for option in branches.availableOptions track by option.Id" ng-model="branches.selectedOption" ng-change="branchChanged()">
+                                                                        </select> -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputName" class="col-md-4 control-label">Service</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" ng-model="finalObj.TypeOfService">
+                                        <option ng-repeat="x in services.availableOptions" value="{{x.Id}}">{{x.Title_Eng}}</option>
+                                    </select>
+                                    <!--                                    <select  class="form-control" name="servicesSelect" ng-options="option.Title_Eng for option in services.availableOptions track by option.Id" ng-model="services.selectedOption" >
+                                                                        </select>  -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label for="inputName" class="col-md-4 control-label">Date</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input id="datenow" class="form-control" type="text" ng-model="dateObj.selectdDate" disabledates dates="disableDates" serviceid="services.selectedOption" branchid="branches.selectedOption">
+                                    </div>
+                                </div>
+                            </div>  
+                            <div class="col-md-6">
+                                <label for="inputName" class="col-md-4 control-label">Select Appointment</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" ng-model="finalObj.mixtime" ng-change="finalObj.mixtime()">
+                                        <option ng-repeat="x in appointments"> {{x.StartTimeStr}}-{{x.EndTimeStr}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <br><div class="btn btn-primary" ng-class="{
+                                        'spinner-wave' : loaderr == true}" ng-click="scheduleAppointment()"><span ng-if="!loaderr">Schedule</span>
+                            </div>
+                            <div class="col-md-6">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<footer-bar-english></footer-bar-english>
