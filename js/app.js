@@ -292,7 +292,7 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
 // })
 
 
-        .run(function ($rootScope, $state, $location,Appointment) {
+        .run(function ($rootScope, $state, $location, Appointment) {
 
             $rootScope.branchtabs = [
                 true, false, false, false
@@ -316,17 +316,25 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                         $rootScope.branchtabs[i] = false;
                     }
                 }
-                
+
                 Appointment.getBranchWorkingDays($rootScope.branchId)
-                    .success(function (res) {
-                        $rootScope.availableWorkingDays = res;
-                    });
+                        .success(function (res) {
+                            $rootScope.availableWorkingDays = res;
+                        });
+
+//              removing disable class from tabs
+                if (ind === 0) {
+                    $('ul > li').addClass("li_disabled");
+                    $rootScope.showAddNewButton = true;
+                } else {
+                    $('ul > li').removeClass("li_disabled");
+                    $rootScope.showAddNewButton = false;
+                }
             }
 
             $rootScope.actives = [true, false, false, false, false, false, false, false, false, false, false, false];
             $rootScope.navigateState = function (state) {
                 $state.go(state)
-
 
                 if (state == 'dashboard') {
                     $rootScope.actives = [true, false, false, false, false, false, false];
@@ -350,7 +358,6 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     $rootScope.actives = [false, false, false, false, false, false, true];
                 }
             }
-
             var currentUrl = $location.url();
             if (currentUrl.includes("dashboard")) {
                 $rootScope.actives = [true, false, false, false, false, false, false];
