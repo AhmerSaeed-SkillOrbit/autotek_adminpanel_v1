@@ -2263,7 +2263,7 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
     User.getSingleAppUser($stateParams.id).success(function (res) {
         if (res !== "" || res !== 'undefined') {
             $scope.finalObj.CustomerId = $stateParams.id;
-            $scope.CustomerName = res[0].FirstName;
+            $scope.CustomerName = res[0].FirstName + ' ' + res[0].LastName;
         } else {
             $scope.finalObj.CustomerName = 'Unknown';
             $scope.finalObj.CustomerId = '0';
