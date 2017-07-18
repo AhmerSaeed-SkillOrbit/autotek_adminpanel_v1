@@ -430,7 +430,19 @@ app.controller('companiesCtrl', function($state, $scope, User, $http) {
 
                 if (errors.length != 0) {
                     console.log('errors occured',errors);
-                    $scope.errorText = "Name (En), Name (Ar) , Phone Number , Address , Email , Primary Contact , Primary Phone , Primary Email , Other Contact Details , Secondary Contact , Secondary Phone , Secondary Email , Other Contact , Bank Detail , Other Payment Methods , Company Commission , Status Or ERP Reference Number is Empty";
+                    // $scope.errorText = "Name (En), Name (Ar) , Phone Number , Address , Email , Primary Contact , Primary Phone , Primary Email , Other Contact Details , Secondary Contact , Secondary Phone , Secondary Email , Other Contact , Bank Detail , Other Payment Methods , Company Commission , Status Or ERP Reference Number is Empty";
+                    $scope.errorText = "";
+                    for (var i = 0; i < errors.length; i++) {
+                        console.log('errors occured',errors[i].message);
+                        if(errors.length-2 > i){
+                            $scope.errorText += errors[i].message + ", ";
+                        }else if(errors.length-2 == i){
+                            $scope.errorText += errors[i].message + " and ";
+                        }
+                        else if(errors.length-1 == i) {
+                            $scope.errorText += errors[i].message + "";
+                        }
+                    }
                     $scope.showErrorAlert = true;
                     $scope.switchBool = function(value) {
                         $scope[value] = !$scope[value];
