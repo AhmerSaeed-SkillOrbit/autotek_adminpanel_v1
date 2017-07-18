@@ -1810,64 +1810,17 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
     }
 })
 
-app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope, Branch, User) {
-    console.log("all branch available ctrl")
+app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope, Branch, User, $window) {
     $scope.final_obj = {};
-    $scope.isDataLoading = true;
-    $scope.allServices = [];
-
-//    for setting branch id in the input field dynamically
-//    if ($rootScope.availableServiceObj != null) {
-//        console.log('if', $rootScope.availableServiceObj);
-//    } else {
-//        console.log('else', $rootScope.availableServiceObj);
     $scope.final_obj.Id = $rootScope.branchId;
-//    }
-    console.log('The Selected Branch', $rootScope.branchId);
-    User.getServices().success(function (res) {
-        for (var i = 0; i < res.length; i++) {
-            res[i].checked = false;
-            $scope.allServices.push(res[i]);
-        }
-
-        $scope.isDataLoading = false;
-    })
-            .error(function (err) {
-                console.log(err)
-                $scope.isDataLoading = false;
-            });
-
-    /*
-     //
-     //        Branch.availableService($rootScope.branchId).success(function (res) {
-     //        if (res.length > 0) {
-     //            console.log("Available Service in Selected Branch is Exist", res);
-     //            for (var i = 0; i < res.length; i++) {
-     //                for (var j = 0; j < res.length; j++) {
-     //                    if ($scope.allServices[i].Id === res[j].Id) {
-     //                        $scope.allServices[i].checked = true;
-     //                    }
-     //                }
-     //            }
-     //            $scope.isDataLoading = false;
-     //        } else {
-     //            console.log("No Available Service in Selected Branch is Exist", res);
-     //        }
-     //    })
-     //            .error(function (err) {
-     //                $scope.isDataLoading = false;
-     //            })
-     */
-
-
     $scope.loaderr = false;
     $scope.updateAvailableServices = function () {
         console.log("Saving Available Service");
         var final_Services = [];
 
-        for (var i = 0; i < $scope.allServices.length; i++) {
-            if ($scope.allServices[i].checked) {
-                final_Services.push($scope.allServices[i]);
+        for (var i = 0; i < $rootScope.allServices.length; i++) {
+            if ($rootScope.allServices[i].checked) {
+                final_Services.push($rootScope.allServices[i]);
             }
         }
         $scope.loaderr = true;
@@ -1891,17 +1844,7 @@ app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope,
                         console.log('error in saving');
                         $scope.loaderr = false;
                     });
-
         });
-
-//        Branch.updateWorkingDay(final_Services, $scope.final_obj.branchId).success(function (res) {
-////            alert("Success fully updated services");
-//            $scope.loaderr = false;
-//        })
-//                .error(function (err) {
-//                    alert("There is some server error in updating services");
-//                    $scope.loaderr = false;
-//                });
     }
 });
 
@@ -1927,7 +1870,7 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
             .error(function (err) {
                 $rootScope.shiftYearLoading = false;
                 $scope.loaderr = false;
-            })
+            });
 
 //for adding shift year in shift year setup form
     $scope.addShftYear = function () {
@@ -2010,15 +1953,24 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
     $scope.getBranchShifts = function () {
         $scope.isBranchShiftLoading = true;
         $scope.deleteBranchShiftLoader = [];
-        Branch.getBranchShifts($scope.brShiftObj.branchId, $scope.brShiftObj.shiftId).success(function (res) {
+
+        Branch.getBranchShifts($rootScope.branchId, $scope.addShiftObj.ShiftYearId).success(function (res) {
             $scope.isBranchShiftLoading = false;
-            $scope.allBranchShifts = res;
-            for (var i = 0; i < res.length; i++) {
-                $scope.deleteBranchShiftLoader.push(false);
+            if (res.length > 0) {
+                $scope.allBranchShifts = res;
+                $scope.addShiftObj.BranchWorkingDayId = res[0].Id;
+                $scope.addShiftObj.ShiftTitle_En = res[0].ShiftTitle_En;
+                $scope.addShiftObj.ShiftTitle_Ar = res[0].ShiftTitle_Ar;
+                $scope.timeObj.ShiftStartTime = new Date(res[0].ShiftStartTime);
+                $scope.timeObj.ShiftEndTime = new Date(res[0].ShiftEndTime);
+                $scope.saveShiftButton = false;
+                $scope.updateShiftButton = true;
+            } else {
+                console.log('Shift not exist for this Branch', res);
             }
-            $scope.showShiftGrid = true;
         })
                 .error(function (err) {
+                    console.log('err', err);
                     $scope.isBranchShiftLoading = false;
 
                 })
@@ -2050,12 +2002,13 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
             $scope.SaveShiftloader = false;
             $scope.addShiftObj = {};
             $scope.timeObj = {};
+            $window.location.reload();
+
+        }).error(function (err) {
+            console.log("Error in saving Form");
+            $scope.SaveShiftloader = false;
         })
-                .error(function (err) {
-                    console.log("Error in saving Form");
-                    $scope.SaveShiftloader = false;
-                })
-    }
+    };
 
     $scope.updateBranchShift = function (obj, $index) {
 
@@ -2065,7 +2018,7 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
         $scope.timeObj = {
             ShiftStartTime: new Date(obj.ShiftStartTime),
             ShiftEndTime: new Date(obj.ShiftEndTime)
-        }
+        };
 
         $scope.saveShiftButton = false;
         $scope.updateShiftButton = true;
@@ -2076,101 +2029,51 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
         try {
             $scope.addShiftObj.ShiftStartTime = $filter("date")($scope.timeObj.ShiftStartTime, 'h:mm a');
             $scope.addShiftObj.ShiftEndTime = $filter("date")($scope.timeObj.ShiftEndTime, 'h:mm a');
-            $scope.addShiftObj.ShiftYearId = $scope.addShiftObj.ShifttYearId;
+            $scope.addShiftObj.Id = $scope.addShiftObj.BranchWorkingDayId;
+            $scope.addShiftObj.BranchId = $rootScope.branchId;
 
-            console.log('year id', $scope.addShiftObj);
-            console.log($scope.addShiftObj)
+            console.log('Shift Year ID', $scope.addShiftObj);
+
             $scope.SaveShiftloader = true;
+
             Branch.updateBranchShift($scope.addShiftObj).success(function (res) {
                 $scope.SaveShiftloader = false;
                 $scope.addShiftObj = {};
                 $scope.timeObj = {};
+                $window.location.reload();
             })
                     .error(function (err) {
                         $scope.SaveShiftloader = false;
-                        alert("unable to update due to server error");
                         $scope.addShiftObj = {};
                         $scope.timeObj = {};
                         $scope.saveShiftButton = true;
                         $scope.updateShiftButton = false;
-                    })
+                    });
         } catch (err) {
 
         }
     }
 })
 
-app.controller('BranchWorkingCtrl', function ($scope, $rootScope, Branch) {
+app.controller('BranchWorkingCtrl', function ($scope, $rootScope, $window, Branch) {
     $scope.final_obj = {};
-    $scope.days = [{
-            checked: false,
-            value: "Monday"
-        }, {
-            checked: false,
-            value: "Tuesday"
-        }, {
-            checked: false,
-            value: "Wednesday"
-        }, {
-            checked: false,
-            value: "Thursday"
-        }, {
-            checked: false,
-            value: "Friday"
-        }, {
-            checked: false,
-            value: "Saturday"
-        }, {
-            checked: false,
-            value: "Sunday"
-        }]
-
-    $scope.isDataLoading = false;
-
-//    not required now
-//    $scope.change = function () {
-//        $scope.isDataLoading = true;
-//        for (var i = 0; i < $scope.days.length; i++) {
-//            $scope.days[i].checked = false;
-//        }
-//        Branch.getWorkingDays($rootScope.branchId).success(function (res) {
-//            console.log("res", res, $scope.days);
-//            for (var i = 0; i < $scope.days.length; i++) {
-//
-//                for (var j = 0; j < res.length; j++) {
-//                    if (res[j] == $scope.days[i].value) {
-//                        console.log("in if");
-//                        $scope.days[i].checked = true;
-//                    }
-//                }
-//
-//            }
-//            $scope.isDataLoading = false;
-//        })
-//                .error(function (err) {
-//                    $scope.isDataLoading = false;
-//                })
-//    }
-
     $scope.loaderr1 = false;
     $scope.updateWorkingDay = function () {
         var final_Days = [];
-
-        for (var i = 0; i < $scope.days.length; i++) {
-            if ($scope.days[i].checked) {
-                final_Days.push($scope.days[i].value);
+        for (var i = 0; i < $rootScope.days.length; i++) {
+            if ($rootScope.days[i].checked) {
+                final_Days.push($rootScope.days[i].value);
             }
         }
         $scope.loaderr1 = true;
         Branch.updateWorkingDay(final_Days, $rootScope.branchId).success(function (res) {
             $scope.loaderr1 = false;
-        })
-                .error(function (err) {
-                    console.log("Failed to update working days");
-                    $scope.loaderr1 = false;
-                });
+            $window.location.reload();
+        }).error(function (err) {
+            console.log("Failed to update working days");
+            $scope.loaderr1 = false;
+        });
     }
-
 });
 
 
@@ -2324,22 +2227,6 @@ app.controller('SignupCtrl', ['$scope', '$rootScope', '$http', '$state', '$locat
 
     }])
 
-
-// .controller("MyCtrl", function($scope) {
-
-//   $scope.open = function() {
-//     $scope.showModal = true;
-//   };
-
-//   $scope.ok = function() {
-//     $scope.showModal = false;
-//   };
-
-//   $scope.cancel = function() {
-//     $scope.showModal = false;
-//   };
-
-// })
 app.service('NavigateState', function ($state, localStorageService) {
     this.navigate = function (state, params) {
         //      $rootScope.navigate=function(state,params){
@@ -2363,15 +2250,23 @@ app.service('NavigateState', function ($state, localStorageService) {
 })
 
 app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appointment, $http, $state, $rootScope, $filter, $window) {
-//    $scope.searchedCustomer = "";
-//    $scope.selectedBranch = "";
-//    $scope.selectedServices = "";
-//    $scope.selectdDate = "";
-//    $scope.selectStartTime = "";
-//    $scope.selectEndTime = "";
     $scope.finalObj = {};
     $scope.finalObj.AppointmentSlot = {};
-    $scope.finalObj.CustomerId = $stateParams.id;
+
+//    get the customer for whom we are scheduling appointment
+    User.getSingleAppUser($stateParams.id).success(function (res) {
+        if (res !== "" || res !== 'undefined') {
+            $scope.finalObj.CustomerId = $stateParams.id;
+            $scope.CustomerName = res[0].FirstName;
+        } else {
+            $scope.finalObj.CustomerName = 'Unknown';
+            $scope.finalObj.CustomerId = '0';
+        }
+    }).error(function (err) {
+        $scope.finalObj.CustomerName = 'Unknown';
+        $scope.finalObj.CustomerId = '0';
+    });
+
     //  for cities
     User.getCities().success(function (res) {
         //$scope.allCities = res;

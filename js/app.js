@@ -6,7 +6,6 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
         .config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider) {
 
             $urlRouterProvider.otherwise('login');
-
             $stateProvider
 
                     .state('login', {
@@ -24,12 +23,6 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                         templateUrl: "/EnglishTemplates/login.html",
                         controller: "LogoutCtrl"
                     })
-                    // .state('app', {
-                    //     url: "/",
-                    //     abstract: true,
-                    //     template: '<ui-view/>'
-                    //    // templateUrl: "/EnglishTemplates/dashboard.html"
-                    // })
 
                     .state('dashboard', {
                         url: "/dashboard",
@@ -88,23 +81,23 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     .state('appointcalender', {
                         url: "/appointcalender",
                         templateUrl: "/EnglishTemplates/appointcalender.html",
-                        controller: "AppointCalenderCtrl"
-                                // resolve: {
-                                //     loginRequired: function(User) {
-                                //         return User.loginRequired();
-                                //     }
-                                // }
+                        controller: "AppointCalenderCtrl",
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
 
                     .state('scheduleappoint', {
                         url: "/scheduleappoint/:id",
                         templateUrl: "/EnglishTemplates/scheduleappoint.html",
                         controller: "scheduleAppointment",
-//                        resolve: {
-//                            loginRequired: function (User) {
-//                                return User.loginRequired();
-//                            }
-//                        }
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
                     .state('servicesetup', {
                         url: "/servicesetup",
@@ -155,17 +148,32 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     .state('addMobileUser', {
                         url: "/addMobileUser",
                         templateUrl: "/EnglishTemplates/appusers/manage.html",
-                        controller: "addNewAppUser"
+                        controller: "addNewAppUser",
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
                     .state('addSalesAgent', {
                         url: "/addSalesAgent",
                         templateUrl: "/EnglishTemplates/agents/manage.html",
-                        controller: "addNewSalesAgent"
+                        controller: "addNewSalesAgent",
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
                     .state('addPromotion', {
                         url: "/addPromotion",
                         templateUrl: "/EnglishTemplates/promotions/manage.html",
-                        controller: "addNewPromotion"
+                        controller: "addNewPromotion",
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
                     .state('updateMobileUser', {
                         url: "/updateMobileUser/:id",
@@ -195,7 +203,12 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     .state('addCompany', {
                         url: "/addCompany",
                         templateUrl: "/EnglishTemplates/companies/manage.html",
-                        controller: "companiesCtrl"
+                        controller: "companiesCtrl",
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
 
                     .state('appuserdetail', {
@@ -231,7 +244,12 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     .state('companiesReports', {
                         url: "/companiesReports",
                         templateUrl: "/EnglishTemplates/reports/companiesreport.html",
-                        controller: "companiesCtrl"
+                        controller: "companiesCtrl",
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
                     .state('profile_details_page', {
                         url: "/profile_details_page",
@@ -241,7 +259,12 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     .state('shiftyears', {
                         url: "/shiftyears",
                         templateUrl: "/EnglishTemplates/shiftyears.html",
-                        controller: "BranchShitfCtrl"
+                        controller: "BranchShitfCtrl",
+                        resolve: {
+                            loginRequired: function (User) {
+                                return User.loginRequired();
+                            }
+                        }
                     })
 
                     //----- Arabic Routes -----//
@@ -293,13 +316,10 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
             localStorageServiceProvider
                     .setPrefix('Autotek');
         })
-// .run(function(){
-
-// })
 
 
-        .run(function ($rootScope, $state, $location, Appointment) {
-
+        .run(function ($rootScope, $state, $location, Appointment, User, Branch) {
+            $rootScope.allServices = [];
             $rootScope.branchtabs = [
                 true, false, false, false
             ]
@@ -311,10 +331,6 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     $rootScope.branchName = obj.BranchName;
                 }
 
-                console.log('obj', obj);
-                console.log('gridIndex', gridIndex);
-
-//                $scope.final_obj.Id = obj.Id;
                 for (var i = 0; i < $rootScope.branchtabs.length; i++) {
                     if (i == ind) {
                         $rootScope.branchtabs[i] = true;
@@ -323,19 +339,117 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     }
                 }
 
-                Appointment.getBranchWorkingDays($rootScope.branchId)
-                        .success(function (res) {
-                            $rootScope.availableWorkingDays = res;
-                        });
-
-//              removing disable class from tabs
                 if (ind === 0) {
+//                 i-e main info tab
+                    console.log('in main info');
+                    $rootScope.allServices = [];
                     $('ul > li').addClass("li_disabled");
                     $rootScope.showAddNewButton = true;
-                } else {
+                }
+                else if (ind === 1) {
+//                 i-e available service tab
+                    $rootScope.isDataLoading = true;
                     $('ul > li').removeClass("li_disabled");
                     $rootScope.showAddNewButton = false;
+                    User.getServices().success(function (res) {
+                        if (res !== "" || res !== "undefined") {
+                            Branch.availableService($rootScope.branchId).success(function (avlServices) {
+                                if (avlServices.length > 0) {
+                                    console.log("asdf", avlServices);
+                                    console.log("rootScope.allServices", $rootScope.allServices);
+                                    for (var i = 0; i < res.length; i++) {
+                                        $rootScope.allServices.push(res[i]);
+                                        for (var j = 0; j < avlServices.length; j++) {
+                                            if ($rootScope.allServices[i].Id === avlServices[j].Id) {
+                                                console.log('matched');
+                                                $rootScope.allServices[i].checked = true;
+                                            } else {
+//                                                $rootScope.allServices[i].checked = false;
+                                                console.log('not_matched');
+                                            }
+                                        }
+                                    }
+                                    $rootScope.isDataLoading = false;
+                                } else {
+                                    console.log("No Available Service in Selected Branch is Exist");
+                                    for (var i = 0; i < res.length; i++) {
+                                        $rootScope.allServices.push(res[i]);
+                                    }
+                                    $rootScope.isDataLoading = false;
+                                }
+                            })
+                                    .error(function (err) {
+                                        console.log("Error in available services", err);
+                                        $rootScope.isDataLoading = false;
+                                    });
+                        } else {
+
+                        }
+                    }).error(function (err) {
+                        console.log(err);
+                        $rootScope.isDataLoading = false;
+                    });
                 }
+                else if (ind === 2) {
+//                   i-e shift details tab
+                    $('ul > li').removeClass("li_disabled");
+                    $rootScope.showAddNewButton = false;
+                    $rootScope.allServices = [];
+//                   this is for shift detail page
+                    Appointment.getBranchWorkingDays($rootScope.branchId)
+                            .success(function (res) {
+                                $rootScope.availableWorkingDays = res;
+                            });
+                }
+                else if (ind === 3) {
+//                  i-e workingday tab 
+                    $('ul > li').removeClass("li_disabled");
+                    $rootScope.showAddNewButton = false;
+                    $rootScope.isDataLoading = true;
+                    $rootScope.allServices = [];
+                    $rootScope.days = [{
+                            checked: false,
+                            value: "Monday"
+                        }, {
+                            checked: false,
+                            value: "Tuesday"
+                        }, {
+                            checked: false,
+                            value: "Wednesday"
+                        }, {
+                            checked: false,
+                            value: "Thursday"
+                        }, {
+                            checked: false,
+                            value: "Friday"
+                        }, {
+                            checked: false,
+                            value: "Saturday"
+                        }, {
+                            checked: false,
+                            value: "Sunday"
+                        }];
+//                 i-e working day tab
+                    Appointment.getBranchWorkingDays($rootScope.branchId)
+                            .success(function (res) {
+                                $rootScope.availableWorkingDays = res;
+                                if (res !== "" || res !== "undefined") {
+                                    console.log('Testing');
+                                    for (var i = 0; i < $rootScope.days.length; i++) {
+                                        for (var j = 0; j < res.length; j++) {
+                                            if ($rootScope.days[i].value === res[j].WorkingDay) {
+                                                console.log('matched');
+                                                $rootScope.days[i].checked = true;
+                                            } else {
+                                                console.log('not-matched');
+                                            }
+                                        }
+                                    }
+                                }
+                                $rootScope.isDataLoading = false;
+                            });
+                }
+
             }
 
             $rootScope.actives = [true, false, false, false, false, false, false, false, false, false, false, false];

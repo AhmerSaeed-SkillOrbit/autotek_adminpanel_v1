@@ -200,7 +200,7 @@
                                             </tr>
                                         </thead>
                                         <tbody ng-if="!isDataLoading">
-                                            <tr ng-repeat="x in allServices">
+                                            <tr ng-repeat="x in $root.allServices">
                                                 <td>
                                                     <input type="checkbox" ng-model="x.checked">
                                                 </td>
@@ -256,7 +256,7 @@
                                 <div class="row form-group">
                                     <div class="col-md-6">
                                         <label for="inputName" class="control-label">Select Shift Year</label>
-                                        <select class="form-control" ng-model="addShiftObj.ShiftYearId">
+                                        <select class="form-control" ng-model="addShiftObj.ShiftYearId" ng-change="getBranchShifts()">
                                             <option ng-repeat="x in $root.ShiftYears" value="{{x.Id}}" ng-selected="x.Id == addShiftObj.ShifttYearId"> {{x.YearTitle_En}}</option>
                                         </select>
                                     </div>      
@@ -278,11 +278,11 @@
                                     </div>
                                     <div class="col-md-6">
                                         <br><label for="inputName" class="control-label">Start Time</label>
-                                        <input type="time" ng-model="timeObj.ShiftStartTime" id="startTime" class="form-control" placeholder="HH:MM:SS a" autocomplete="off">
+                                        <input type="time" ng-model="timeObj.ShiftStartTime" id="startTime" class="form-control" placeholder="" autocomplete="off">
                                     </div>
                                     <div class="col-md-6">
                                         <br><label for="inputName" class="control-label">End Time</label>
-                                        <input type="time" ng-model="timeObj.ShiftEndTime" id="endTime" class="form-control" placeholder="HH:MM:SS a" autocomplete="off">
+                                        <input type="time" ng-model="timeObj.ShiftEndTime" id="endTime" class="form-control" placeholder="" autocomplete="off">
                                     </div>
                                     <div class="col-sm-12">
                                         <br>
