@@ -1561,7 +1561,9 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
     $scope.saveBtnShow = true;
     $scope.isDataLoading = true;
     $scope.deleteloaderr = [];
-
+    // $scope.showSuccessAlert = false;
+    $scope.showErrorAlert = false;
+    $scope.errorText = "";
 
     $scope.showBranchAvailableTab = function () {
         console.log('showBranchAvailableTab');
@@ -1598,8 +1600,73 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
                 $scope.final_obj.CityName = $scope.allCities[i].CityName;
             }
         }
+
+        $scope.switchBool = function (value) {
+            $scope[value] = !$scope[value];
+        };
         $scope.loaderr = true;
-        if ($scope.final_obj.BranchName != null && $scope.final_obj.BranchNameInArabic != null && $scope.final_obj.Address != null && $scope.final_obj.Longitude != null && $scope.final_obj.Latitude != null) {
+
+
+        
+
+        var errors = [];
+
+        if ($scope.final_obj.BranchName == null || $scope.final_obj.BranchName == "") {
+            errors.push({message: 'Name (English) is required'})
+        }
+
+        if ($scope.final_obj.BranchNameInArabic == null || $scope.final_obj.BranchNameInArabic == "") {
+            errors.push({message: 'Name (Arabic) is required'})
+        }
+
+        if ($scope.final_obj.Address == null || $scope.final_obj.Address == "") {
+            errors.push({message: 'Address is required'})
+        }
+
+        if ($scope.final_obj.Longitude == null || $scope.final_obj.Longitude == "") {
+            errors.push({message: 'Longitude is required'})
+        }
+
+        if ($scope.final_obj.Latitude == null || $scope.final_obj.Latitude == "") {
+            errors.push({message: 'Latitude is required'})
+        }
+
+        if ($scope.final_obj.CityId == null || $scope.final_obj.CityId == "") {
+            errors.push({message: 'City is required'})
+        }
+
+
+
+
+        if (errors.length != 0) {
+            console.log('errors occured');
+            // $scope.errorText = "Name (English), Name (Arabic), Address , GPS (Longitude) , GPS (Latitude) Or City is Empty";
+            $scope.errorText = "";
+            for (var i = 0; i < errors.length; i++) {
+                console.log('errors occured',errors[i].message);
+                if(errors.length-2 > i){
+                    $scope.errorText += errors[i].message + ", ";
+                }else if(errors.length-2 == i){
+                    $scope.errorText += errors[i].message + " and ";
+                }
+                else if(errors.length-1 == i) {
+                    $scope.errorText += errors[i].message + "";
+                }
+                
+                
+            }
+            $scope.showErrorAlert = true;
+            $scope.switchBool = function (value) {
+                $scope[value] = !$scope[value];
+
+            };
+            $scope.loaderr = false;
+
+
+        }else{
+
+
+        // if ($scope.final_obj.BranchName != null && $scope.final_obj.BranchNameInArabic != null && $scope.final_obj.Address != null && $scope.final_obj.Longitude != null && $scope.final_obj.Latitude != null) {
             Branch.add($scope.final_obj).success(function (res) {
 
                 //$scope.deleteloaderr.push(false);
@@ -1612,6 +1679,7 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
                     $rootScope.allBranches = res;
                     $scope.isDataLoading = false;
                     $scope.loaderr = false;
+                    $scope.showErrorAlert = false;
                     for (var i = 0; i < res.length; i++) {
                         $scope.deleteloaderr.push(false);
                     }
@@ -1625,9 +1693,10 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
                     .error(function (err) {
                         $scope.loaderr = false;
                     })
-        } else {
-            alert("Please fill all the fields first");
-            $scope.loaderr = false;
+        // } else {
+        //     alert("Please fill all the fields first");
+        //     $scope.loaderr = false;
+        // }
         }
     }
     $scope.showgrid = true;
@@ -1638,10 +1707,81 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
         $scope.saveBtnShow = false;
         $scope.updateBtnShow = true;
         $scope.showBranchMainInfoForm = true;
+        $scope.showErrorAlert = false;
+        $scope.errorText = "";
     }
 
     $scope.update = function () {
         $scope.loaderr = true;
+
+
+        $scope.switchBool = function (value) {
+            $scope[value] = !$scope[value];
+        };
+        $scope.loaderr = true;
+
+
+        
+
+        var errors = [];
+
+        if ($scope.final_obj.BranchName == null || $scope.final_obj.BranchName == "") {
+            errors.push({message: 'Name (English) is required'})
+        }
+
+        if ($scope.final_obj.BranchNameInArabic == null || $scope.final_obj.BranchNameInArabic == "") {
+            errors.push({message: 'Name (Arabic) is required'})
+        }
+
+        if ($scope.final_obj.Address == null || $scope.final_obj.Address == "") {
+            errors.push({message: 'Address is required'})
+        }
+
+        if ($scope.final_obj.Longitude == null || $scope.final_obj.Longitude == "") {
+            errors.push({message: 'Longitude is required'})
+        }
+
+        if ($scope.final_obj.Latitude == null || $scope.final_obj.Latitude == "") {
+            errors.push({message: 'Latitude is required'})
+        }
+
+        if ($scope.final_obj.CityId == null || $scope.final_obj.CityId == "") {
+            errors.push({message: 'City is required'})
+        }
+
+
+
+
+        if (errors.length != 0) {
+            console.log('errors occured');
+            // $scope.errorText = "Name (English), Name (Arabic), Address , GPS (Longitude) , GPS (Latitude) Or City is Empty";
+            $scope.errorText = "";
+            for (var i = 0; i < errors.length; i++) {
+                console.log('errors occured',errors[i].message);
+                if(errors.length-2 > i){
+                    $scope.errorText += errors[i].message + ", ";
+                }else if(errors.length-2 == i){
+                    $scope.errorText += errors[i].message + " and ";
+                }
+                else if(errors.length-1 == i) {
+                    $scope.errorText += errors[i].message + "";
+                }
+                
+                
+            }
+            $scope.showErrorAlert = true;
+            $scope.switchBool = function (value) {
+                $scope[value] = !$scope[value];
+
+            };
+            $scope.loaderr = false;
+
+
+        }else{
+
+
+
+
         Branch.update($scope.final_obj).success(function (res) {
             // $scope.allBranches.push($scope.final_obj);
             $scope.allBranches[$scope.gridindex] = $scope.final_obj;
@@ -1650,10 +1790,12 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
             $scope.saveBtnShow = true;
             $scope.updateBtnShow = false;
             $scope.loaderr = false;
+            $scope.showErrorAlert = false;
         })
                 .error(function (err) {
                     $scope.loaderr = false;
                 })
+        }
     }
 
     $scope.deleteBranch = function (obj, index) {
@@ -2039,6 +2181,8 @@ app.controller('BranchSetupCtrl', function ($scope, Branch, $rootScope) {
     $rootScope.deleteShiftYearloader = [];
     $rootScope.showAddNewButton = true;
     $scope.showBranchMainInfoForm = false;
+    // $scope.showErrorAlert = false;
+
 
     $scope.showMainBranchInfoForm = function () {
         if ($scope.showBranchMainInfoForm) {
