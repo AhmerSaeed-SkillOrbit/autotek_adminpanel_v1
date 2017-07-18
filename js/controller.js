@@ -1668,7 +1668,7 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
     }
 })
 
-app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope, Branch, User,$window) {
+app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope, Branch, User, $window) {
     console.log("all branch available ctrl")
     $scope.final_obj = {};
 //    $scope.isDataLoading = true;
@@ -1695,8 +1695,8 @@ app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope,
 ////                $scope.isDataLoading = false;
 ////            });
 
-   
-     //
+
+    //
 //             Branch.availableService($rootScope.branchId).success(function (res) {
 //             if (res.length > 0) {
 //                 console.log("Available Service in Selected Branch is Exist", res);
@@ -1715,8 +1715,8 @@ app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope,
 //                 .error(function (err) {
 //                     $scope.isDataLoading = false;
 //                 })
-     
-     
+
+
     $scope.loaderr = false;
     $scope.updateAvailableServices = function () {
         console.log("Saving Available Service");
@@ -1869,14 +1869,22 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
         $scope.deleteBranchShiftLoader = [];
 
         Branch.getBranchShifts($rootScope.branchId, $scope.addShiftObj.ShiftYearId).success(function (res) {
-
-            console.log('The Change Branch', res);
             $scope.isBranchShiftLoading = false;
-            $scope.allBranchShifts = res;
-//            for (var i = 0; i < res.length; i++) {
+            if (res !== "" || res !== "undefined") {
+                $scope.allBranchShifts = res;
+                $scope.addShiftObj.BranchWorkingDayId = res[0].Id;
+                $scope.addShiftObj.ShiftTitle_En = res[0].ShiftTitle_En;
+                $scope.addShiftObj.ShiftTitle_Ar = res[0].ShiftTitle_Ar;
+                $scope.timeObj.ShiftStartTime = new Date(res[0].ShiftStartTime);
+                $scope.timeObj.ShiftEndTime = new Date(res[0].ShiftEndTime);
+            } else {
+                console.log('Shift not exist for this Branch', res);
+            }
+
+////            for (var i = 0; i < res.length; i++) {
 //                $scope.deleteBranchShiftLoader.push(false);
-//            }
-//            $scope.showShiftGrid = true;
+////            }
+////            $scope.showShiftGrid = true;
         })
                 .error(function (err) {
                     console.log('err', err);
@@ -1963,7 +1971,7 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
 
 app.controller('BranchWorkingCtrl', function ($scope, $rootScope, Branch) {
     $scope.final_obj = {};
- 
+
 
     $scope.isDataLoading = false;
 

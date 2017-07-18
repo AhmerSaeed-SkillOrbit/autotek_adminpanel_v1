@@ -372,6 +372,9 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
 //                            $scope.isDataLoading = false;
                                 } else {
                                     console.log("No Available Service in Selected Branch is Exist");
+                                    for (var i = 0; i < res.length; i++) {
+                                        $rootScope.allServices.push(res[i]);
+                                    }
                                 }
                             })
                                     .error(function (err) {
