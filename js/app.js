@@ -88,12 +88,12 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     .state('appointcalender', {
                         url: "/appointcalender",
                         templateUrl: "/EnglishTemplates/appointcalender.html",
-                        controller:"AppointCalenderCtrl"
-                        // resolve: {
-                        //     loginRequired: function(User) {
-                        //         return User.loginRequired();
-                        //     }
-                        // }
+                        controller: "AppointCalenderCtrl"
+                                // resolve: {
+                                //     loginRequired: function(User) {
+                                //         return User.loginRequired();
+                                //     }
+                                // }
                     })
 
                     .state('scheduleappoint', {
@@ -238,6 +238,11 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                         templateUrl: "/EnglishTemplates/appusers/detail.html",
                         controller: "profile_details_page"
                     })
+                    .state('shiftyears', {
+                        url: "/shiftyears",
+                        templateUrl: "/EnglishTemplates/shiftyears.html",
+                        controller: "BranchShitfCtrl"
+                    })
 
                     //----- Arabic Routes -----//
                     .state('appusersa', {
@@ -264,6 +269,7 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                         url: "/dashboarda",
                         templateUrl: "/ArabicPages/dashboard.html"
                     })
+
             //      $rootScope.navigate=function(state,params){
             //     var lang=localStorageService.get('pageLanguage');
             //     console.log(lang);
@@ -292,12 +298,23 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
 // })
 
 
-        .run(function ($rootScope, $state, $location) {
+        .run(function ($rootScope, $state, $location, Appointment) {
 
             $rootScope.branchtabs = [
                 true, false, false, false
             ]
-            $rootScope.tabclick = function (ind) {
+            $rootScope.tabclick = function (ind, obj, gridIndex) {
+                if (obj != null) {
+                    $rootScope.availableServiceGridIndex = gridIndex;
+                    $rootScope.availableServiceObj = obj;
+                    $rootScope.branchId = obj.Id;
+                    $rootScope.branchName = obj.BranchName;
+                }
+
+                console.log('obj', obj);
+                console.log('gridIndex', gridIndex);
+
+//                $scope.final_obj.Id = obj.Id;
                 for (var i = 0; i < $rootScope.branchtabs.length; i++) {
                     if (i == ind) {
                         $rootScope.branchtabs[i] = true;
@@ -305,12 +322,25 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                         $rootScope.branchtabs[i] = false;
                     }
                 }
+
+                Appointment.getBranchWorkingDays($rootScope.branchId)
+                        .success(function (res) {
+                            $rootScope.availableWorkingDays = res;
+                        });
+
+//              removing disable class from tabs
+                if (ind === 0) {
+                    $('ul > li').addClass("li_disabled");
+                    $rootScope.showAddNewButton = true;
+                } else {
+                    $('ul > li').removeClass("li_disabled");
+                    $rootScope.showAddNewButton = false;
+                }
             }
 
             $rootScope.actives = [true, false, false, false, false, false, false, false, false, false, false, false];
             $rootScope.navigateState = function (state) {
                 $state.go(state)
-
 
                 if (state == 'dashboard') {
                     $rootScope.actives = [true, false, false, false, false, false, false];
@@ -334,7 +364,6 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                     $rootScope.actives = [false, false, false, false, false, false, true];
                 }
             }
-
             var currentUrl = $location.url();
             if (currentUrl.includes("dashboard")) {
                 $rootScope.actives = [true, false, false, false, false, false, false];

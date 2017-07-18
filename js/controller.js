@@ -1022,7 +1022,7 @@ app.controller('addNewAppUser', function ($scope, User, $http) {
 
         if ($scope.addUser.EmailAddress == null || $scope.addUser.EmailAddress == "") {
             errors.push({message: 'Email is required'});
-        } 
+        }
         // else {
         //     var email = $scope.addUser.EmailAddress.match($scope.regex);
         //     if (email == null) {
@@ -1133,7 +1133,7 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
 
     // }
 
-    
+
     User.getTriggers().success(function (res) {
         $scope.allTriggers = res;
     })
@@ -1156,17 +1156,17 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
     User.getCompanies(0, 10).success(function (res) {
         $scope.allCompanies = res;
     })
-    .error(function (err) {
-        console.log(err);
-    })
- $scope.addPromotion.OnTrigger = false;
-    $scope.OnTriggerChange= function () {
+            .error(function (err) {
+                console.log(err);
+            })
+    $scope.addPromotion.OnTrigger = false;
+    $scope.OnTriggerChange = function () {
         // console.log("check : ",$scope.addPromotion.OnTrigger);
         // console.log("check : ",$scope.addPromotion.companySelected.Id);
-        
+
         if ($scope.addPromotion.OnTrigger == true) {
             $scope.show = true;
-        }else{
+        } else {
             $scope.show = false;
         }
     }
@@ -1186,8 +1186,8 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
         var errors = [];
 
         if ($scope.addPromotion.cTypes == null || $scope.addPromotion.cTypes == "") {
-            errors.push({message: 'Type is required'})            
-        }else{
+            errors.push({message: 'Type is required'})
+        } else {
             if ($scope.addPromotion.cTypes != "All" && $scope.addPromotion.cTypes != "External") {
                 if ($scope.addPromotion.companySelected == null || $scope.addPromotion.companySelected == "") {
                     errors.push({message: 'Company is required'});
@@ -1220,7 +1220,7 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
         if ($scope.addPromotion.Status == null || $scope.addPromotion.Status == "") {
             errors.push({message: 'Status is required'})
         }
-        if($scope.addPromotion.OnTrigger == true){
+        if ($scope.addPromotion.OnTrigger == true) {
             if ($scope.addPromotion.Trigger == null || $scope.addPromotion.Trigger == "") {
                 errors.push({message: 'Trigger is required'});
                 $scope.errorText += "Trigger, "
@@ -1229,7 +1229,7 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
             //     errors.push({message: 'Template Coupen is required'})
             // }
         }
-            
+
 
         if (errors.length != 0) {
             console.log('errors occured');
@@ -1249,17 +1249,17 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
 
             // }
             // console.log($scope.usercustom)
-            console.log('triger ',$scope.addPromotion.Trigger)
+            console.log('triger ', $scope.addPromotion.Trigger)
             var tri_id = 0;
 
             if ($scope.addPromotion.OnTrigger == false) {
-                console.log('triger if',$scope.addPromotion.Trigger)
+                console.log('triger if', $scope.addPromotion.Trigger)
                 tri_id = 0;
-            }else{
-                console.log('triger else',$scope.addPromotion.Trigger)
-                if($scope.addPromotion.Trigger != undefined){
-                   tri_id = $scope.addPromotion.Trigger.Id;    
-                }                
+            } else {
+                console.log('triger else', $scope.addPromotion.Trigger)
+                if ($scope.addPromotion.Trigger != undefined) {
+                    tri_id = $scope.addPromotion.Trigger.Id;
+                }
             }
 
             $scope.promotionCustom = {
@@ -1267,7 +1267,7 @@ app.controller('addNewPromotion', function ($state, $scope, User, $http) {
                 "DiscountCriteriaId": tri_id,
                 "AffiliateCompanyId": ($scope.addPromotion.cTypes == "All" || $scope.addPromotion.cTypes == "External" ? 0 : $scope.addPromotion.companySelected.Id),
                 "CouponCode": $scope.addPromotion.templateCoupen,
-                "IsForAll" : ($scope.addPromotion.cTypes == "All" ? "true" : "false"),
+                "IsForAll": ($scope.addPromotion.cTypes == "All" ? "true" : "false"),
                 "Description_EN": $scope.addPromotion.titelEn,
                 "Description_AR": $scope.addPromotion.titelAr,
                 "IsActive": $scope.addPromotion.status,
@@ -1376,7 +1376,7 @@ app.controller('addNewSalesAgent', function ($state, $scope, User, $http) {
 
         if ($scope.addSalesAgent.Email == null || $scope.addSalesAgent.Email == "") {
             errors.push({message: 'Email is required'});
-        } 
+        }
         // else {
         //     var email = $scope.addSalesAgent.EmailAddress.match($scope.regex);
         //     if (email == null) {
@@ -1561,6 +1561,13 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
     $scope.saveBtnShow = true;
     $scope.isDataLoading = true;
     $scope.deleteloaderr = [];
+
+
+    $scope.showBranchAvailableTab = function () {
+        console.log('showBranchAvailableTab');
+        $("#branchAvailableServicesTab").show();
+    };
+
     Branch.getAll().success(function (res) {
         console.log("res", res)
         $scope.allBranches = res;
@@ -1630,11 +1637,12 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
         $scope.showgrid = false;
         $scope.saveBtnShow = false;
         $scope.updateBtnShow = true;
+        $scope.showBranchMainInfoForm = true;
     }
 
     $scope.update = function () {
         $scope.loaderr = true;
-        Branch.add($scope.final_obj).success(function (res) {
+        Branch.update($scope.final_obj).success(function (res) {
             // $scope.allBranches.push($scope.final_obj);
             $scope.allBranches[$scope.gridindex] = $scope.final_obj;
             $scope.final_obj = {};
@@ -1660,11 +1668,20 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
     }
 })
 
-app.controller('BranchAvailableSeviceCtrl', function ($scope, $rootScope, Branch, User) {
+app.controller('BranchAvailableSeviceCtrl', function ($http, $scope, $rootScope, Branch, User) {
     console.log("all branch available ctrl")
     $scope.final_obj = {};
     $scope.isDataLoading = true;
     $scope.allServices = [];
+
+//    for setting branch id in the input field dynamically
+//    if ($rootScope.availableServiceObj != null) {
+//        console.log('if', $rootScope.availableServiceObj);
+//    } else {
+//        console.log('else', $rootScope.availableServiceObj);
+    $scope.final_obj.Id = $rootScope.branchId;
+//    }
+    console.log('The Selected Branch', $rootScope.branchId);
     User.getServices().success(function (res) {
         for (var i = 0; i < res.length; i++) {
             res[i].checked = false;
@@ -1676,33 +1693,34 @@ app.controller('BranchAvailableSeviceCtrl', function ($scope, $rootScope, Branch
             .error(function (err) {
                 console.log(err)
                 $scope.isDataLoading = false;
-            })
+            });
 
+    /*
+     //
+     //        Branch.availableService($rootScope.branchId).success(function (res) {
+     //        if (res.length > 0) {
+     //            console.log("Available Service in Selected Branch is Exist", res);
+     //            for (var i = 0; i < res.length; i++) {
+     //                for (var j = 0; j < res.length; j++) {
+     //                    if ($scope.allServices[i].Id === res[j].Id) {
+     //                        $scope.allServices[i].checked = true;
+     //                    }
+     //                }
+     //            }
+     //            $scope.isDataLoading = false;
+     //        } else {
+     //            console.log("No Available Service in Selected Branch is Exist", res);
+     //        }
+     //    })
+     //            .error(function (err) {
+     //                $scope.isDataLoading = false;
+     //            })
+     */
 
-    $scope.change = function () {
-        $scope.isDataLoading = true;
-        for (var i = 0; i < $scope.allServices.length; i++) {
-            $scope.allServices[i].checked = false;
-        }
-
-        Branch.availableService($scope.final_obj.branchId).success(function (res) {
-            console.log("Res", res);
-            for (var i = 0; i < $scope.allServices.length; i++) {
-                for (var j = 0; j < res.length; j++) {
-                    if ($scope.allServices[i].Id == res[j].Id) {
-                        $scope.allServices[i].checked = true;
-                    }
-                }
-            }
-            $scope.isDataLoading = false;
-        })
-                .error(function (err) {
-                    $scope.isDataLoading = false;
-                })
-    }
 
     $scope.loaderr = false;
-    $scope.updateServices = function () {
+    $scope.updateAvailableServices = function () {
+        console.log("Saving Available Service");
         var final_Services = [];
 
         for (var i = 0; i < $scope.allServices.length; i++) {
@@ -1711,59 +1729,74 @@ app.controller('BranchAvailableSeviceCtrl', function ($scope, $rootScope, Branch
             }
         }
         $scope.loaderr = true;
-        Branch.updateWorkingDay(final_Services, $scope.final_obj.branchId).success(function (res) {
-//            alert("Success fully updated services");
-            $scope.loaderr = false;
-        })
-                .error(function (err) {
-                    alert("There is some server error in updating services");
-                    $scope.loaderr = false;
-                })
+
+//        updating form
+        var params = "grant_type=client_credentials&client_id=Android01&client_secret=21B5F798-BE55-42BC-8AA8-0025B903DC3B&scope=app1";
+        var url = "http://autotecauth.azurewebsites.net/identity/connect/token";
+        $http.post(url, params, {
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+        }).success(function (result) {
+            $http.post('http://autotecapi.azurewebsites.net/api/branch/' + $rootScope.branchId + '/services ', final_Services, {
+                headers: {
+                    'Authorization': "Bearer" + " " + result.access_token
+                }
+            }).success(function (res) {
+                console.log('scucessfully saved');
+                $scope.loaderr = false;
+                $window.location.reload();
+            })
+                    .error(function (err) {
+                        console.log('error in saving');
+                        $scope.loaderr = false;
+                    });
+
+        });
+
+//        Branch.updateWorkingDay(final_Services, $scope.final_obj.branchId).success(function (res) {
+////            alert("Success fully updated services");
+//            $scope.loaderr = false;
+//        })
+//                .error(function (err) {
+//                    alert("There is some server error in updating services");
+//                    $scope.loaderr = false;
+//                });
     }
+});
 
-})
-
-app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter) {
+app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter, $window) {
     $scope.final_obj = {};
     $scope.dateObj = {};
     $scope.saveBtnShow = true;
     $scope.updateBtnShow = false;
     $scope.loaderr = false;
     $scope.showgrid = true;
-    $scope.addShftYear = function () {
 
+    Branch.getShiftYears().success(function (res) {
+        console.log("shift years", res);
+        $rootScope.ShiftYears = [];
+        $rootScope.ShiftYears = res;
+        $rootScope.deleteShiftYearloader = [];
+        $rootScope.shiftYearLoading = false;
+        for (var i = 0; i < res.length; i++) {
+            $rootScope.deleteShiftYearloader.push(false);
+        }
+        $scope.loaderr = false;
+    })
+            .error(function (err) {
+                $rootScope.shiftYearLoading = false;
+                $scope.loaderr = false;
+            })
+
+//for adding shift year in shift year setup form
+    $scope.addShftYear = function () {
         try {
-//            $scope.final_obj.YearStartDate = $scope.dateObj.YearStartDate.toISOString().split('T')[0]
-//            $scope.final_obj.YearEndDate = $scope.dateObj.YearEndDate.toISOString().split('T')[0]
+
             $scope.final_obj.YearStartDate = $filter("date")($scope.dateObj.YearStartDate, 'yyyy-MM-dd');
             $scope.final_obj.YearEndDate = $filter("date")($scope.dateObj.YearEndDate, 'yyyy-MM-dd');
-
-//            $scope.final_obj.YearStartDate = $scope.dateObj.YearStartDate.toISOString().split('T')[0]
-//            $scope.final_obj.YearEndDate = $scope.dateObj.YearEndDate.toISOString().split('T')[0]
-
-            console.log($scope.final_obj)
             $scope.loaderr = true;
             Branch.addShiftYears($scope.final_obj).success(function (res) {
                 console.log("res", res);
-
-                $scope.final_obj = {};
-                //$rootScope.ShiftYears.push(res);
-
-                Branch.getShiftYears().success(function (res) {
-                    console.log("shift years", res);
-                    $rootScope.ShiftYears = [];
-                    $rootScope.ShiftYears = res;
-                    $rootScope.deleteShiftYearloader = [];
-                    $rootScope.shiftYearLoading = false;
-                    for (var i = 0; i < res.length; i++) {
-                        $rootScope.deleteShiftYearloader.push(false);
-                    }
-                    $scope.loaderr = false;
-                })
-                        .error(function (err) {
-                            $rootScope.shiftYearLoading = false;
-                            $scope.loaderr = false;
-                        })
+                $window.location.reload();
             })
                     .error(function (err) {
                         $scope.loaderr = false;
@@ -1774,23 +1807,21 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter)
 
     }
 
-    $scope.updateShiftYear = function (obj, $index) {
-        $scope.gridindex = $index;
-        $scope.final_obj = obj;
-        $scope.dateObj = {
-            YearStartDate: new Date(obj.YearStartDate),
-            YearEndDate: new Date(obj.YearEndDate)
-        }
-        $scope.saveBtnShow = false;
-        $scope.updateBtnShow = true;
-        $scope.showgrid = false;
+//for deleting shift year in shift year setup form
+    $scope.deleteShift = function (obj, index) {
+        $rootScope.deleteShiftYearloader[index] = true;
+        Branch.deleteShiftYears(obj.Id).success(function (res) {
+            $rootScope.deleteShiftYearloader[index] = false;
+            $rootScope.ShiftYears.splice(index, 1);
+        })
+                .error(function (err) {
+                    $rootScope.deleteShiftYearloader[index] = false;
+                })
     }
 
+//for updating shift year in shift year setup form
     $scope.update = function () {
         try {
-//            $scope.final_obj.YearStartDate = $scope.dateObj.YearStartDate.toISOString().split('T')[0]
-//            $scope.final_obj.YearEndDate = $scope.dateObj.YearEndDate.toISOString().split('T')[0]
-
             $scope.final_obj.YearStartDate = $filter("date")($scope.dateObj.YearStartDate, 'yyyy-MM-dd');
             $scope.final_obj.YearEndDate = $filter("date")($scope.dateObj.YearEndDate, 'yyyy-MM-dd');
 
@@ -1813,15 +1844,17 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter)
         }
     }
 
-    $scope.deleteShift = function (obj, index) {
-        $rootScope.deleteShiftYearloader[index] = true;
-        Branch.deleteShiftYears(obj.Id).success(function (res) {
-            $rootScope.deleteShiftYearloader[index] = false;
-            $rootScope.ShiftYears.splice(index, 1);
-        })
-                .error(function (err) {
-                    $rootScope.deleteShiftYearloader[index] = false;
-                })
+//used when click on update button from grid
+    $scope.updateShiftYear = function (obj, $index) {
+        $scope.gridindex = $index;
+        $scope.final_obj = obj;
+        $scope.dateObj = {
+            YearStartDate: new Date(obj.YearStartDate),
+            YearEndDate: new Date(obj.YearEndDate)
+        }
+        $scope.saveBtnShow = false;
+        $scope.updateBtnShow = true;
+        $scope.showgrid = false;
     }
     ////////////////////////////////Branch shifts portions///////////////////////////////////////
     $scope.brShiftObj = {};
@@ -1864,26 +1897,23 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter)
     $scope.SaveShiftloader = false;
 
     $scope.addBranchShift = function () {
-        console.log($scope.timeObj);
 
-        // var formatedStartTime = $filter("date")($scope.branchShiftStartTime, 'h:mm a');
-        // var formatedEndTime = $filter("date")($scope.branchShiftEndTime, 'h:mm a');
-        //var ampm = (parseInt($scope.timeObj.ShiftStartTime.toISOString().split('T')[1].split(':')[0])) >= 12 ? 'PM' : 'AM'
-        $scope.addShiftObj.ShiftStartTime = $filter("date")($scope.timeObj.ShiftStartTime, 'h:mm a');
+        $scope.addShiftObj.BranchId = $rootScope.branchId;
         $scope.addShiftObj.ShiftEndTime = $filter("date")($scope.timeObj.ShiftEndTime, 'h:mm a');
-        console.log($scope.addShiftObj)
+        $scope.addShiftObj.ShiftStartTime = $filter("date")($scope.timeObj.ShiftStartTime, 'h:mm a');
+
         $scope.SaveShiftloader = true;
         Branch.addBranchShifts($scope.addShiftObj).success(function (res) {
+            console.log("Form is saved successfully");
             $scope.SaveShiftloader = false;
             $scope.addShiftObj = {};
             $scope.timeObj = {};
-//            alert("successfuly added branch shift");
         })
                 .error(function (err) {
+                    console.log("Error in saving Form");
                     $scope.SaveShiftloader = false;
                 })
     }
-
 
     $scope.updateBranchShift = function (obj, $index) {
 
@@ -1928,7 +1958,7 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter)
     }
 })
 
-app.controller('BranchWorkingCtrl', function ($scope, Branch) {
+app.controller('BranchWorkingCtrl', function ($scope, $rootScope, Branch) {
     $scope.final_obj = {};
     $scope.days = [{
             checked: false,
@@ -1954,29 +1984,31 @@ app.controller('BranchWorkingCtrl', function ($scope, Branch) {
         }]
 
     $scope.isDataLoading = false;
-    $scope.change = function () {
-        $scope.isDataLoading = true;
-        for (var i = 0; i < $scope.days.length; i++) {
-            $scope.days[i].checked = false;
-        }
-        Branch.getWorkingDays($scope.final_obj.branchId).success(function (res) {
-            console.log("res", res, $scope.days);
-            for (var i = 0; i < $scope.days.length; i++) {
 
-                for (var j = 0; j < res.length; j++) {
-                    if (res[j] == $scope.days[i].value) {
-                        console.log("in if");
-                        $scope.days[i].checked = true;
-                    }
-                }
-
-            }
-            $scope.isDataLoading = false;
-        })
-                .error(function (err) {
-                    $scope.isDataLoading = false;
-                })
-    }
+//    not required now
+//    $scope.change = function () {
+//        $scope.isDataLoading = true;
+//        for (var i = 0; i < $scope.days.length; i++) {
+//            $scope.days[i].checked = false;
+//        }
+//        Branch.getWorkingDays($rootScope.branchId).success(function (res) {
+//            console.log("res", res, $scope.days);
+//            for (var i = 0; i < $scope.days.length; i++) {
+//
+//                for (var j = 0; j < res.length; j++) {
+//                    if (res[j] == $scope.days[i].value) {
+//                        console.log("in if");
+//                        $scope.days[i].checked = true;
+//                    }
+//                }
+//
+//            }
+//            $scope.isDataLoading = false;
+//        })
+//                .error(function (err) {
+//                    $scope.isDataLoading = false;
+//                })
+//    }
 
     $scope.loaderr1 = false;
     $scope.updateWorkingDay = function () {
@@ -1988,28 +2020,35 @@ app.controller('BranchWorkingCtrl', function ($scope, Branch) {
             }
         }
         $scope.loaderr1 = true;
-        Branch.updateWorkingDay(final_Days, $scope.final_obj.branchId).success(function (res) {
-            alert("Success fully updated working days");
+        Branch.updateWorkingDay(final_Days, $rootScope.branchId).success(function (res) {
             $scope.loaderr1 = false;
         })
                 .error(function (err) {
+                    console.log("Failed to update working days");
                     $scope.loaderr1 = false;
-                })
+                });
     }
 
-    // $scope.change = function(index) {
-    //     console.log("index", index)
-    //     $scope.days[index].checked = !$scope.days[index].checked;
-    // }
-})
+});
 
 
 app.controller('BranchSetupCtrl', function ($scope, Branch, $rootScope) {
 
+    $rootScope.btnCaption = "Add New";
     $rootScope.shiftYearLoading = true;
     $rootScope.deleteShiftYearloader = [];
+    $rootScope.showAddNewButton = true;
+    $scope.showBranchMainInfoForm = false;
+
+    $scope.showMainBranchInfoForm = function () {
+        if ($scope.showBranchMainInfoForm) {
+            $scope.showBranchMainInfoForm = false;
+        } else {
+            $scope.showBranchMainInfoForm = true;
+        }
+    };
+
     Branch.getShiftYears().success(function (res) {
-        console.log("shift years", res);
         $rootScope.ShiftYears = res;
         $rootScope.shiftYearLoading = false;
         for (var i = 0; i < res.length; i++) {
@@ -2018,629 +2057,10 @@ app.controller('BranchSetupCtrl', function ($scope, Branch, $rootScope) {
     })
             .error(function (err) {
                 $rootScope.shiftYearLoading = false;
-            })
-    // $scope.tabs = [
-    //     true, false, false, false
-    // ]
-    // $scope.tabclick = function(ind) {
-    //     for (var i = 0; i < $scope.tabs.length; i++) {
-    //         if (i == ind) {
-    //             $scope.tabs[i] = true;
-    //         } else {
-    //             $scope.tabs[i] = false;
-    //         }
-    //     }
-    // }
+            });
+});
 
-    // Branch.getAll().success(function(res) {
-    //     console.log("res",res)
-    // })
-    // .error(function(err) {
-
-    // })
-})
-
-// app.controller('BranchSetupCtrl', function($scope, User, $http, $window, $filter, $rootScope) {
-//     $scope.branchNameEn = "";
-//     $scope.brancNameAr = "";
-//     $scope.branchAddress = "";
-//     $scope.latitude = "";
-//     $scope.longitude = "";
-//     $scope.cityId = "";
-//     $scope.startdate = "";
-//     $scope.enddate = "";
-//     $scope.yearTitleEn = "";
-//     $scope.yearTitleAr = "";
-//     $scope.branchShiftTitleEn = "";
-//     $scope.branchShiftTitleAr = "";
-//     $scope.branchShiftStartTime = "";
-//     $scope.branchShiftEndTime = "";
-//     $scope.shiftId = "";
-//     $scope.shiftId1 = "";
-//     $scope.branchId = "";
-//     $scope.branchId1 = "";
-//     $scope.shiftSelectedId = "";
-//     $scope.branchSelectedId = "";
-//     $scope.shiftUpdatedEn = "";
-//     $scope.shiftUpdatedAr = "";
-//     $scope.branchUpdated = "";
-//     $scope.branchShitId = "";
-//     $scope.shiftUpdatedId = "";
-//     $scope.branchSelectedId2 = "";
-//     $scope.branchId3 = "";
-//     $scope.shiftYearObject = {};
-//     $scope.allCities = [];
-//     $scope.allBranches = [];
-//     $scope.allShftYears = [];
-//     $scope.allBranchShifts = [];
-//     $scope.allWorkingDays = [];
-//     $scope.showgrid = true;
-//     $scope.customBranch = {};
-//     $scope.brancShiftObject = {};
-//     $scope.updateBtnShow = false;
-//     $scope.saveBtnShow = true;
-//     $scope.isDataLoading = true;
-//     $scope.isDataLoading1 = false;
-//     $scope.id = "";
-//     $scope.active = "";
-//     $scope.selectedDays = [];
-//     $scope.lst = [];
-//     $scope.showDays = false;
-//     // $scope.allDays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-//     // $scope.getDays = function(list, active){
-//     //     if (active)
-//     //         $scope.selectedDays.push(list);
-//     //     else
-//     //         $scope.selectedDays.splice($scope.selectedDays.indexOf(list), 1);
-//     //         console.log($scope.selectedDays,'selectedDays')
-//     // }
-//     $scope.lists = [
-//         "Monday",
-//         "Tuesday",
-//         "Wednesday",
-//         "Thursday",
-//         "Friday",
-//         "Saturday",
-//         "Sunday"
-//     ];
-//     $scope.active = "";
-//     $scope.active1 = true;
-
-//     $scope.change = function(list, active) {
-//             if (active)
-//                 $scope.lst.push(list);
-//             else
-//                 $scope.lst.splice($scope.lst.indexOf(list), 1);
-//         }
-//         // $scope.change1 = function(list, active1){
-//         //     if ($scope.activ1)
-//         //         $scope.lst.push(list);
-//         //     else
-//         //         $scope.lst.splice($scope.lst.indexOf(list), 1);
-//         // }
-//     $scope.getBranch2 = function() {
-
-//         $scope.branchSelectedId2 = $scope.branchId2.Id;
-//         console.log('get branch', $scope.branchSelectedId2)
-//             //     $scope.getWorkingdayByBranch=function(){
-//             // }
-//     }
-
-//     $scope.getBranch3 = function() {
-//         $scope.showDays = true;
-//         $scope.branchSelectedId3 = $scope.branchId3.Id;
-//         User.getBranchWorkingDays($scope.branchSelectedId3).success(function(res) {
-//                 $scope.getBranchWorkingDays = res;
-//                 console.log('all days', $scope.getBranchWorkingDays)
-//             })
-//             .error(function(err) {
-//                 console.log(err)
-//             })
-
-//     }
-//     $scope.addUpdateWorkingDays = function() {
-//         console.log($scope.lst, 'selected days second function')
-
-//         $scope.switchBool = function(value) {
-//             $scope[value] = !$scope[value];
-//         };
-//         $scope.loaderr = true;
-//         $scope.showSuccessAlert = false;
-//         $scope.showSuccessAlertDelete = false;
-//         $scope.showErrorAlert = false;
-//         $scope.errorText = "";
-
-
-//         var params = "grant_type=client_credentials&client_id=Android01&client_secret=21B5F798-BE55-42BC-8AA8-0025B903DC3B&scope=app1";
-//         $scope.brancObject = {
-//             "CityId": $scope.cityId.CityId,
-//             "BranchName": $scope.branchNameEn,
-//             "BranchNameInArabic": $scope.brancNameAr,
-//             "Address": $scope.branchAddress,
-//             "Longitude": $scope.longitude,
-//             "Latitude": $scope.latitude
-//         }
-//         var url = "http://autotecauth.azurewebsites.net/identity/connect/token";
-//         $http.post(url, params, {
-//             headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
-//         }).success(function(result) {
-//             $http.post('http://autotecapi.azurewebsites.net/api/branch/' + $scope.branchSelectedId2 + '/workingdays', $scope.lst, {
-//                     headers: {
-//                         'Authorization': "Bearer" + " " + result.access_token
-//                     }
-//                 }).success(function(res) {
-//                     console.log(res)
-//                     console.log('in add branch scucess')
-//                     $scope.loaderr = false;
-//                     $scope.showSuccessAlert = true;
-//                     $window.location.reload();
-//                 })
-//                 .error(function(err) {
-//                     $scope.loaderr = false
-//                     $scope.errorText = err.Message;
-//                     $scope.showErrorAlert = true;
-//                     console.log(err)
-//                 })
-
-//         })
-
-
-
-//     }
-
-//     User.getCities().success(function(res) {
-//             $scope.allCities = res;
-//             console.log('cities', $scope.allCities.CityName)
-//         })
-//         .error(function(err) {
-//             console.log(err)
-//         })
-//     $scope.getId = function() {
-//         console.log($scope.cityId.CityId);
-//     }
-//     $scope.addBranch = function() {
-
-//         $scope.switchBool = function(value) {
-//             $scope[value] = !$scope[value];
-//         };
-//         $scope.loaderr = true;
-//         $scope.showSuccessAlert = false;
-//         $scope.showSuccessAlertDelete = false;
-//         $scope.showErrorAlert = false;
-//         $scope.errorText = "";
-
-
-//         if ($scope.branchNameEn != "" && $scope.brancNameAr != "" && $scope.branchAddress != "" && $scope.latitude != "" && $scope.longitude != "") {
-//             var params = "grant_type=client_credentials&client_id=Android01&client_secret=21B5F798-BE55-42BC-8AA8-0025B903DC3B&scope=app1";
-//             $scope.brancObject = {
-//                 "CityId": $scope.cityId.CityId,
-//                 "BranchName": $scope.branchNameEn,
-//                 "BranchNameInArabic": $scope.brancNameAr,
-//                 "Address": $scope.branchAddress,
-//                 "Longitude": $scope.longitude,
-//                 "Latitude": $scope.latitude
-//             }
-//             var url = "http://autotecauth.azurewebsites.net/identity/connect/token";
-//             $http.post(url, params, {
-//                 headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
-//             }).success(function(result) {
-//                 $http.post('http://autotecapi.azurewebsites.net/api/branch', $scope.brancObject, {
-//                         headers: {
-//                             'Authorization': "Bearer" + " " + result.access_token
-//                         }
-//                     }).success(function(res) {
-//                         console.log(res)
-//                         console.log('in add branch scucess')
-//                         $scope.loaderr = false;
-//                         $scope.showSuccessAlert = true;
-//                         $scope.isDataLoading = false;
-//                         $window.location.reload();
-//                     })
-//                     .error(function(err) {
-//                         $scope.loaderr = false
-//                         $scope.errorText = err.Message;
-//                         $scope.showErrorAlert = true;
-//                         console.log(err)
-//                         $scope.isDataLoading = false;
-//                     })
-
-//             })
-
-//         } else {
-//             alert("Please fill all the fields first");
-//             $scope.loaderr = false;
-//         }
-
-//     }
-//     $scope.tabs = [
-//         true, false, false, false
-//     ]
-//     $scope.tabclick = function(ind) {
-//         for (var i = 0; i < $scope.tabs.length; i++) {
-//             if (i == ind) {
-//                 $scope.tabs[i] = true;
-//             } else {
-//                 $scope.tabs[i] = false;
-//             }
-//         }
-//     }
-
-//     User.getBranches().success(function(res) {
-//             console.log(res)
-//             $scope.allBranches = res;
-//             $scope.isDataLoading = false;
-//         })
-//         .error(function(err) {
-//             console.log(err)
-//             $scope.isDataLoading = false;
-//         })
-
-//     $scope.DeleteBranch = function(deleteIdd) {
-//         $scope.switchBool = function(value) {
-//             $scope[value] = !$scope[value];
-//         };
-//         User.deleteBranch(deleteIdd).success(function(res) {
-//                 console.log(res, 'res')
-//                 $scope.loaderr = false;
-//                 $scope.showSuccessAlertDelete = true;
-//                 $window.location.reload();
-//             })
-//             .error(function(err) {
-//                 console.log(err)
-//                 $scope.loaderr = false
-//                 $scope.errorText = err.Message;
-//                 $scope.showErrorAlert = true;
-//             })
-//     }
-
-//     //Update Branch CouponCode
-//     $scope.navigateToBranchUpdate = function(branchObject) {
-//         $scope.id = branchObject.Id;
-//         $scope.branchNameEn = branchObject.BranchName;
-//         $scope.brancNameAr = branchObject.BranchNameInArabic;
-//         $scope.branchAddress = branchObject.Address;
-//         $scope.latitude = parseFloat(branchObject.Latitude);
-//         $scope.longitude = parseFloat(branchObject.Longitude);
-//         $scope.cityId = branchObject.CityId;
-//         $scope.updateBtnShow = true;
-//         $scope.saveBtnShow = false;
-//         $scope.showgrid = false;
-//     }
-//     $scope.updateBranch = function() {
-
-//         if ($scope.branchNameEn != "" && $scope.brancNameAr != "" && $scope.branchAddress != "" && $scope.latitude != "" && $scope.longitude != "") {
-//             $scope.customBranch = {
-//                 "Id": $scope.id,
-//                 "CityId": $scope.cityId.CityId,
-//                 "BranchName": $scope.branchNameEn,
-//                 "BranchNameInArabic": $scope.brancNameAr,
-//                 "Address": $scope.branchAddress,
-//                 "Longitude": $scope.latitude,
-//                 "Latitude": $scope.longitude
-//             }
-//             User.UpdateBranch($scope.customBranch).success(function(res) {
-//                     console.log(res)
-//                     $scope.showgrid = true;
-//                     $window.location.reload();
-//                 })
-//                 .error(function(err) {
-//                     console.log(err);
-//                 })
-//         } else {
-//             alert("Please fill all the fields first");
-//         }
-
-//     }
-//     User.getShiftYears().success(function(res) {
-//             $scope.allShftYears = res;
-//             console.log('shft years', $scope.allShftYears)
-//             $scope.isDataLoading = false;
-//         })
-//         .error(function(err) {
-//             console.log(err)
-//             $scope.isDataLoading = false;
-//         })
-
-//     $scope.DeleteShiftYear = function(deleteIdd) {
-//         $scope.switchBool = function(value) {
-//             $scope[value] = !$scope[value];
-//         };
-//         User.deleteShiftYear(deleteIdd).success(function(res) {
-//                 console.log(res, 'res')
-//                 $scope.loaderr = false;
-//                 $scope.showSuccessAlertDelete = true;
-//                 $window.location.reload();
-//             })
-//             .error(function(err) {
-//                 console.log(err)
-//                 $scope.loaderr = false
-//                 $scope.errorText = err.Message;
-//                 $scope.showErrorAlert = true;
-//             })
-//     }
-
-//     $scope.addShftYear = function() {
-
-//             $scope.switchBool = function(value) {
-//                 $scope[value] = !$scope[value];
-//             };
-//             $scope.loaderr = true;
-//             $scope.showSuccessAlert = false;
-//             $scope.showSuccessAlertDelete = false;
-//             $scope.showErrorAlert = false;
-//             $scope.errorText = "";
-
-
-//             if ($scope.startdate != "" && $scope.enddate != "" && $scope.yearTitleEn != "" && $scope.yearTitleAr != "") {
-//                 var params = "grant_type=client_credentials&client_id=Android01&client_secret=21B5F798-BE55-42BC-8AA8-0025B903DC3B&scope=app1";
-//                 var formatedStartDate = $filter("date")($scope.startdate, 'yyyy-MM-dd');
-//                 var formatedEndDate = $filter("date")($scope.enddate, 'yyyy-MM-dd');
-//                 $scope.shiftYearObject = {
-//                     "YearStartDate": formatedStartDate,
-//                     "YearEndDate": formatedEndDate,
-//                     "YearTitle_En": $scope.yearTitleEn,
-//                     "YearTitle_Ar": $scope.yearTitleAr
-//                 }
-//                 console.log('formated startdate when update', formatedStartDate);
-//                 console.log('formated enddate when update', formatedEndDate);
-//                 // $scope.user.UserName = $scope.user.MobileNumber;
-//                 var url = "http://autotecauth.azurewebsites.net/identity/connect/token";
-//                 $http.post(url, params, {
-//                     headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
-//                 }).success(function(result) {
-//                     $http.post('http://autotecapi.azurewebsites.net/api/shiftyears', $scope.shiftYearObject, {
-//                             headers: {
-//                                 'Authorization': "Bearer" + " " + result.access_token
-//                             }
-//                         }).success(function(res) {
-//                             console.log(res)
-//                             console.log('in add shift year scucess')
-//                             $scope.loaderr = false;
-//                             $scope.showSuccessAlert = true;
-//                             $scope.isDataLoading = false;
-//                             $window.location.reload();
-//                         })
-//                         .error(function(err) {
-//                             $scope.loaderr = false
-//                             $scope.errorText = err.Message;
-//                             $scope.showErrorAlert = true;
-//                             console.log(err)
-//                             $scope.isDataLoading = false;
-//                         })
-
-//                 })
-
-//             } else {
-//                 alert("Please fill all the fields first");
-//                 $scope.loaderr = false;
-//             }
-
-//         }
-//         /// update shift years code 
-//     $scope.navigateToUpdateShiftYear = function(object1) {
-
-//         $scope.startdate = $filter("date")(object1.YearStartDate, 'yyyy-MM-dd');
-//         $scope.enddate = $filter("date")(object1.YearEndDate, 'yyyy-MM-dd');
-//         $scope.yearTitleEn = object1.YearTitle_En;
-//         $scope.yearTitleAr = object1.YearTitle_Ar;
-//         $scope.id = object1.Id;
-//         $scope.updateBtnShow = true;
-//         $scope.saveBtnShow = false;
-//         $scope.showgrid = false;
-//         console.log($scope.startdate, 'start date')
-//         console.log($scope.enddate, 'end date')
-//             // console.log($scope.ttl,'title')
-//             // console.log(object1.EndDate,'end date')
-//     }
-//     $scope.updateshiftYear = function() {
-//         $scope.branchShiftStartTime = $rootScope.branchstarttime
-//         $scope.branchShiftEndTime = $rootScope.branchendtime
-//         console.log($scope.branchShiftStartTime, $rootScope.branchstarttime, 'start time contromer')
-//         console.log($scope.branchShiftEndTime, 'end time')
-//         if ($scope.startdate != null && $scope.enddate != null && $scope.yearTitleEn != "" && $scope.yearTitleAr != "") {
-
-//             var formatedStartDate = $filter("date")($scope.startdate, 'yyyy-MM-dd');
-//             var formatedEndDate = $filter("date")($scope.enddate, 'yyyy-MM-dd');
-
-//             console.log('formated startdate when update', formatedStartDate);
-//             console.log('formated enddate when update', formatedEndDate);
-//             $scope.updateShiftYearObject = {
-//                 "Id": $scope.id,
-//                 "YearStartDate": formatedStartDate,
-//                 "YearEndDate": formatedEndDate,
-//                 "YearTitle_En": $scope.yearTitleEn,
-//                 "YearTitle_Ar": $scope.yearTitleAr
-//             }
-
-//             console.log($scope.updateShiftYearObject, 'updated object')
-//             User.UpdateShiftYear($scope.updateShiftYearObject).success(function(res) {
-//                     console.log(res);
-//                     console.log('successfuly updated');
-//                     $scope.showgrid = true;
-//                     $window.location.reload();
-//                     // $scope.isDataLoading = false;
-//                 })
-//                 .error(function(err) {
-//                     console.log(err);
-//                 });
-//         } else {
-//             alert('Please fill all the fields first');
-//         }
-//     }
-
-//     // add branch shift code 
-
-//     $scope.getshift = function() {
-//         console.log('get shift', $scope.shiftId)
-//     }
-
-//     $scope.getshift1 = function() {
-//         console.log('get shift', $scope.shiftId1)
-//         $scope.shiftSelectedId = $scope.shiftId1.Id;
-//     }
-//     $scope.getBranch = function() {
-//         console.log('get branch', $scope.branchId)
-//     }
-//     $scope.getBranch1 = function() {
-//             console.log('get branch', $scope.branchId1)
-//             $scope.branchSelectedId = $scope.branchId1.Id;
-//         }
-//         //   $scope.getBranch2=function(){
-//         //     console.log('get branch',$scope.branchId2)
-//         //     $scope.branchSelectedId2 = $scope.branchId2.Id;
-//         // }
-//     $scope.getBranchShifts = function(branch_Id, shift_Id) {
-//         $scope.isDataLoading1 = true;
-//         User.getBranchShifts(branch_Id, shift_Id).success(function(res) {
-//                 $scope.allBranchShifts = res;
-//                 console.log($scope.allBranchShifts, 'all branch shifts')
-//                 $scope.showgrid = true;
-//                 $scope.isDataLoading1 = false;
-//             })
-//             .error(function(err) {
-//                 console.log(err)
-//                 $scope.isDataLoading1 = false;
-//             })
-//     }
-//     $scope.addBranchShift = function() {
-//         var formatedStartTime = $filter("date")($scope.branchShiftStartTime, 'h:mm a');
-//         var formatedEndTime = $filter("date")($scope.branchShiftEndTime, 'h:mm a');
-//         $scope.switchBool = function(value) {
-//             $scope[value] = !$scope[value];
-//         };
-//         $scope.loaderr1 = true;
-//         $scope.showSuccessAlert = false;
-//         $scope.showSuccessAlertDelete = false;
-//         $scope.showErrorAlert = false;
-//         $scope.errorText = "";
-
-
-//         if ($scope.shiftId.YearTitle_En != "" && $scope.shiftId.YearTitle_Ar != "" && $scope.branchShiftStartTime != "" && $scope.branchShiftEndTime != "" && $scope.branchId.BranchName) {
-//             var params = "grant_type=client_credentials&client_id=Android01&client_secret=21B5F798-BE55-42BC-8AA8-0025B903DC3B&scope=app1";
-//             $scope.brancShiftObject = {
-//                 "ShiftYearId": $scope.shiftId.Id,
-//                 "BranchId": $scope.branchId.Id,
-//                 "ShiftStartTime": formatedStartTime,
-//                 "ShiftEndTime": formatedEndTime,
-//                 "ShiftTitle_En": $scope.shiftId.YearTitle_En,
-//                 "ShiftTitle_Ar": $scope.shiftId.YearTitle_Ar
-//             }
-//             console.log(formatedStartTime, 'start time')
-//             console.log(formatedEndTime, 'end time')
-//             var url = "http://autotecauth.azurewebsites.net/identity/connect/token";
-//             $http.post(url, params, {
-//                 headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
-//             }).success(function(result) {
-//                 $http.post('http://autotecapi.azurewebsites.net/api/branch/shifts', $scope.brancShiftObject, {
-//                         headers: {
-//                             'Authorization': "Bearer" + " " + result.access_token
-//                         }
-//                     }).success(function(res) {
-//                         console.log(res)
-//                         console.log('in add branch shift scucess')
-//                         $scope.loaderr1 = false;
-//                         $scope.showSuccessAlert = true;
-//                         $scope.isDataLoading = false;
-//                         $window.location.reload();
-//                         console.log($scope.brancShiftObject, 'add object')
-//                     })
-//                     .error(function(err) {
-//                         $scope.loaderr1 = false
-//                         $scope.errorText = err.Message;
-//                         $scope.showErrorAlert = true;
-//                         console.log(err)
-//                         $scope.isDataLoading = false;
-//                     })
-
-//             })
-
-//         } else {
-//             alert("Please fill all the fields first");
-//             $scope.loaderr = false;
-//         }
-
-//     }
-
-//     // delete shift branch code
-//     $scope.DeleteShiftBranch = function(deleteIdd) {
-//             console.log(deleteIdd, 'deleteid')
-//             $scope.switchBool = function(value) {
-//                 $scope[value] = !$scope[value];
-//             };
-//             User.deleteShiftBranch(deleteIdd).success(function(res) {
-//                     console.log(res, 'res')
-//                     $scope.loaderr = false;
-//                     $scope.showSuccessAlertDelete = true;
-//                     $window.location.reload();
-//                 })
-//                 .error(function(err) {
-//                     console.log(err)
-//                     $scope.loaderr = false
-//                     $scope.errorText = err.Message;
-//                     $scope.showErrorAlert = true;
-//                 })
-//         }
-//         // Update Shift Branch Code..
-
-//     $scope.navigateToUpdateShiftBranch = function(object2) {
-
-//         // var formatedStartTime = $filter("date")(object2.ShiftStartTime,'h:mm a');
-//         // var formatedEndTime = $filter("date")(object2.ShiftEndTime,'h:mm a');
-//         $scope.branchShitId = object2.Id;
-//         $scope.shiftUpdatedId = object2.ShifttYearId;
-//         //$scope.branchShiftStartTime =$filter("date")(object2.ShiftStartTime,'HH:MM:SS a');
-//         //$scope.branchShiftEndTime = $filter("date")(object2.ShiftEndTime,'HH:MM:SS a');
-//         $scope.shiftUpdatedEn = object2.ShiftTitle_En;
-//         $scope.shiftUpdatedAr = object2.ShiftTitle_Ar;
-//         $scope.branchUpdated = object2.BranchId;
-//         $scope.updateBtnShow = true;
-//         $scope.saveBtnShow = false;
-//         $scope.showgrid = false;
-//         console.log($scope.branchShiftStartTime, 'start time')
-//         console.log($scope.branchShiftEndTime, 'end time')
-//             // console.log($scope.ttl,'title')
-//             // console.log(object1.EndDate,'end date')
-//     }
-//     $scope.updateBranchShift = function() {
-//         console.log($scope.branchShiftStartTime, 'start time')
-//         console.log($scope.branchShiftEndTime, 'end time')
-//         if ($scope.shiftId.YearTitle_En != "" && $scope.shiftId.YearTitle_Ar != "" && $scope.branchShiftStartTime != "" && $scope.branchShiftEndTime != "" && $scope.branchId.BranchName) {
-
-//             var formatedStartTime = $filter("date")(object2.ShiftStartTime, 'h:mm a');
-//             var formatedEndTime = $filter("date")(object2.ShiftEndTime, 'h:mm a');
-
-//             console.log('formated startdate when update', formatedStartTime);
-//             console.log('formated enddate when update', formatedEndTime);
-//             $scope.updateBranchShiftObject = {
-//                 "Id": $scope.branchShitId,
-//                 "BranchId": formatedStartDate,
-//                 "ShiftYearId": $scope.shiftUpdatedId,
-//                 "ShiftStartTime": formatedEndDate,
-//                 "ShiftEndTime": formatedEndTime,
-//                 "ShiftTitle_En": $scope.yearTitleEn,
-//                 "ShiftTitle_Ar": $scope.yearTitleAr
-//             }
-
-//             console.log($scope.updateShiftYearObject, 'updated object')
-//             User.UpdateBranchShift($scope.updateBranchShiftObject).success(function(res) {
-//                     console.log(res);
-//                     console.log('successfuly updated');
-//                     $scope.showgrid = true;
-//                     $window.location.reload();
-//                     // $scope.isDataLoading = false;
-//                 })
-//                 .error(function(err) {
-//                     console.log(err);
-//                 });
-//         } else {
-//             alert('Please fill all the fields first');
-//         }
-//     }
-
-// })
-
-
-app.controller('SignupCtrl', ['$scope', '$rootScope', '$http', '$state', '$location', function ($scope, $rootScope, $http, $state, $location) {
+app.controller('SignupCtrl', ['$scope', '$rootScope', '$http', '$state', '$location', function ($scope, $rootScope, $http, $state, $location, $window) {
 
         $scope.user = {};
         $scope.user.MobileNumber = "";
@@ -2666,7 +2086,7 @@ app.controller('SignupCtrl', ['$scope', '$rootScope', '$http', '$state', '$locat
 
             if ($scope.user.EmailAddress == null || $scope.user.EmailAddress == "") {
                 errors.push({message: 'Email is required'});
-            } 
+            }
             // else {
             //     var email = $scope.user.EmailAddress.match($scope.regex);
             //     if (email == null) {
@@ -2939,14 +2359,14 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
             }).success(function (res) {
                 console.log('scucessfully saved');
 
-                    $scope.loaderr = false;
+                $scope.loaderr = false;
 //                    $scope.showSuccessAlert = true;
 //                    $scope.isDataLoading = false;
 //                    $window.location.reload();
             })
                     .error(function (err) {
                         console.log('error in saving');
-                            $scope.loaderr = false;
+                        $scope.loaderr = false;
 //                            $scope.errorText = err.Message;
 //                            $scope.showErrorAlert = true;
 //                            console.log(err)
@@ -3008,7 +2428,7 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
 //                    $window.location.reload();
                 })
                         .error(function (err) {
-                             console.log('error in saving');
+                            console.log('error in saving');
                             $scope.loaderr = false;
 //                            $scope.errorText = err.Message;
 //                            $scope.showErrorAlert = true;
@@ -3139,253 +2559,253 @@ app.controller('AppointCalenderCtrl', function ($scope, Appointment, $filter, $h
 
 })
 
-app.controller('CalendarCtrl',function($scope,$compile,uiCalendarConfig, $filter, localStorageService, $rootScope, Appointment) {
+app.controller('CalendarCtrl', function ($scope, $compile, uiCalendarConfig, $filter, localStorageService, $rootScope, Appointment) {
     var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
-    
+
     $scope.changeTo = 'Hungarian';
     /* event source that pulls from google.com */
     $scope.eventSource = {
-            url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
-            className: 'gcal-event',           // an option!
-            currentTimezone: 'America/Chicago' // an option!
+        url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
+        className: 'gcal-event', // an option!
+        currentTimezone: 'America/Chicago' // an option!
     };
     /* event source that contains custom events on the scope */
     $scope.events = [
     ];
     /* event source that calls a function on every view switch */
     $scope.eventsF = function (start, end, timezone, callback) {
-      var s = new Date(start).getTime() / 1000;
-      var e = new Date(end).getTime() / 1000;
-      var m = new Date(start).getMonth();
-      var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
-      callback(events);
+        var s = new Date(start).getTime() / 1000;
+        var e = new Date(end).getTime() / 1000;
+        var m = new Date(start).getMonth();
+        var events = [{title: 'Feed Me ' + m, start: s + (50000), end: s + (100000), allDay: false, className: ['customFeed']}];
+        callback(events);
     };
- 
-    var dateObj  = localStorageService.get("DateObj");
- 
+
+    var dateObj = localStorageService.get("DateObj");
+
     $scope.calEventsExt = {
-       color: '#f00',
-       textColor: 'yellow',
-       events: [ 
-          {type:'party',title: 'Lunch',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-          {type:'party',title: 'Lunch 2',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-          {type:'party',title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
+        color: '#f00',
+        textColor: 'yellow',
+        events: [
+            {type: 'party', title: 'Lunch', start: new Date(y, m, d, 12, 0), end: new Date(y, m, d, 14, 0), allDay: false},
+            {type: 'party', title: 'Lunch 2', start: new Date(y, m, d, 12, 0), end: new Date(y, m, d, 14, 0), allDay: false},
+            {type: 'party', title: 'Click for Google', start: new Date(y, m, 28), end: new Date(y, m, 29), url: 'http://google.com/'}
         ]
     };
     /* alert on eventClick */
-    $scope.alertOnEventClick = function( date, jsEvent, view){
+    $scope.alertOnEventClick = function (date, jsEvent, view) {
         $scope.alertMessage = (date.title + ' was clicked ');
     };
     /* alert on Drop */
-     $scope.alertOnDrop = function(event, delta, revertFunc, jsEvent, ui, view){
-       $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
+    $scope.alertOnDrop = function (event, delta, revertFunc, jsEvent, ui, view) {
+        $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
     };
     /* alert on Resize */
-    $scope.alertOnResize = function(event, delta, revertFunc, jsEvent, ui, view ){
-       $scope.alertMessage = ('Event Resized to make dayDelta ' + delta);
+    $scope.alertOnResize = function (event, delta, revertFunc, jsEvent, ui, view) {
+        $scope.alertMessage = ('Event Resized to make dayDelta ' + delta);
     };
     /* add and removes an event source of choice */
-    $scope.addRemoveEventSource = function(sources,source) {
-      var canAdd = 0;
-      angular.forEach(sources,function(value, key){
-        if(sources[key] === source){
-          sources.splice(key,1);
-          canAdd = 1;
+    $scope.addRemoveEventSource = function (sources, source) {
+        var canAdd = 0;
+        angular.forEach(sources, function (value, key) {
+            if (sources[key] === source) {
+                sources.splice(key, 1);
+                canAdd = 1;
+            }
+        });
+        if (canAdd === 0) {
+            sources.push(source);
         }
-      });
-      if(canAdd === 0){
-        sources.push(source);
-      }
     };
     /* add custom event*/
-    $scope.addEvent = function() {
-      $scope.events.push({
-        title: 'Open Sesame',
-        start: new Date(y, m, 28),
-        end: new Date(y, m, 29),
-        className: ['openSesame']
-      });
+    $scope.addEvent = function () {
+        $scope.events.push({
+            title: 'Open Sesame',
+            start: new Date(y, m, 28),
+            end: new Date(y, m, 29),
+            className: ['openSesame']
+        });
     };
     /* remove event */
-    $scope.remove = function(index) {
-      $scope.events.splice(index,1);
+    $scope.remove = function (index) {
+        $scope.events.splice(index, 1);
     };
     /* Change View */
-    $scope.changeView = function(view,calendar) {
-      uiCalendarConfig.calendars[calendar].fullCalendar('changeView',view);
+    $scope.changeView = function (view, calendar) {
+        uiCalendarConfig.calendars[calendar].fullCalendar('changeView', view);
     };
     /* Change View */
-    $scope.renderCalender = function(calendar) {
-      if(uiCalendarConfig.calendars[calendar]){
-        uiCalendarConfig.calendars[calendar].fullCalendar('render');
-      }
+    $scope.renderCalender = function (calendar) {
+        if (uiCalendarConfig.calendars[calendar]) {
+            uiCalendarConfig.calendars[calendar].fullCalendar('render');
+        }
     };
-     /* Render Tooltip */
-    $scope.eventRender = function( event, element, view ) { 
+    /* Render Tooltip */
+    $scope.eventRender = function (event, element, view) {
         element.attr({'tooltip': event.title,
-                     'tooltip-append-to-body': true});
+            'tooltip-append-to-body': true});
         $compile(element)($scope);
     };
- 
-      $rootScope.$on('DateChangeEvent', function(ev, args) {
-            console.log("Args", args);
-                /* config object */
-            $scope.uiConfig = {
-              calendar:{
+
+    $rootScope.$on('DateChangeEvent', function (ev, args) {
+        console.log("Args", args);
+        /* config object */
+        $scope.uiConfig = {
+            calendar: {
                 height: 450,
                 editable: true,
-                header:{
-                 left:'',
-                  center: 'title',
-                  right: 'today prev,next'
+                header: {
+                    left: '',
+                    center: 'title',
+                    right: 'today prev,next'
                 },
-                defaultView: ( args.selectedView == "1" ? 'basicDay' :  (args.selectedView == "7" ? 'basicWeek' : 'month') ) || 'month',
-                defaultDate: typeof args.startDate == "undefined" ? new Date()  : new Date(args.startDate) ,
+                defaultView: (args.selectedView == "1" ? 'basicDay' : (args.selectedView == "7" ? 'basicWeek' : 'month')) || 'month',
+                defaultDate: typeof args.startDate == "undefined" ? new Date() : new Date(args.startDate),
                 gotoDate: new Date(args.startDate),
                 eventClick: $scope.alertOnEventClick,
                 eventDrop: $scope.alertOnDrop,
                 eventResize: $scope.alertOnResize,
                 eventRender: $scope.eventRender
-              }
-            };
-            $rootScope.$broadcast('InitializeCalender', {});
-           
- /* event source that contains custom events on the scope */
-   
+            }
+        };
+        $rootScope.$broadcast('InitializeCalender', {});
+
+        /* event source that contains custom events on the scope */
+
         var startDate = $filter("date")(new Date(args.startDate), 'yyyy-MM-dd');
         var endDate = $filter("date")((new Date(args.endDate)), 'yyyy-MM-dd');
-        Appointment.getAppointmentStartDate(startDate, endDate).success(function(res) {
-            console.log("succeesss1",res)
-             //$scope.events = [];
+        Appointment.getAppointmentStartDate(startDate, endDate).success(function (res) {
+            console.log("succeesss1", res)
+            //$scope.events = [];
             var tempLength = $scope.events.length;
             // console.log("temp length", tempLength)
             if ($scope.events.length > 0) {
                 // console.log("in if");
                 // $scope.events = []; 
-                for (var j=0; j< tempLength; j++) {
-                    $scope.events.splice(0,1);
+                for (var j = 0; j < tempLength; j++) {
+                    $scope.events.splice(0, 1);
                 }
-                
+
             }
             // console.log("argss", $scope.events)
             var eventObj = [];
             var Dates;
-            
+
             for (var i = 0; i < res.length; i++) {
-                Dates= $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
+                Dates = $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
                 if (eventObj.hasOwnProperty(Dates)) {
                     eventObj[Dates]++;
-                }else{
+                } else {
                     eventObj[Dates] = 1;
                 }
             }
             // console.log("eventObj", eventObj)
             // console.log("eventObj lenght", eventObj.length)
             if (args.selectedView == "7" || args.selectedView == "30") {
-                for(key in eventObj){
+                for (key in eventObj) {
                     // console.log("key "+ key + ", value "+eventObj[key])
-                    $scope.events.push({title: 'Appointment : '+eventObj[key], start: new Date(key)})
+                    $scope.events.push({title: 'Appointment : ' + eventObj[key], start: new Date(key)})
                 }
-            }else{
- 
- 
+            } else {
+
+
                 for (var i = 0; i < res.length; i++) {
                     $scope.events.push({
-                        title: res[i].CustomerName+' '+$filter("date")(res[i].AppointmentStartTime, 'h:m:a')+' '+$filter("date")(res[i].AppointmentEndTime, 'h:m:a'), 
-                        start: new Date(res[i].AppointmentStartTime), 
+                        title: res[i].CustomerName + ' ' + $filter("date")(res[i].AppointmentStartTime, 'h:m:a') + ' ' + $filter("date")(res[i].AppointmentEndTime, 'h:m:a'),
+                        start: new Date(res[i].AppointmentStartTime),
                         end: new Date(res[i].AppointmentEndTime)})
                 }
- 
+
             }
-            
-             // console.log("argss", $scope.events)
-                 /* event sources array*/
-    $scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];
-    $scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
+
+            // console.log("argss", $scope.events)
+            /* event sources array*/
+            $scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];
+            $scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
         })
-        .error(function(err) {
-            console.log("Err",err)
-        })
-      })
- 
- 
- 
- 
-                  $scope.uiConfig = {
-              calendar:{
-                height: 450,
-                editable: true,
-                header:{
-                 left:'',
-                  center: 'title',
-                  right: 'today prev,next'
-                },
-                defaultView: 'month',
-                defaultDate: new Date(),
-                eventClick: $scope.alertOnEventClick,
-                eventDrop: $scope.alertOnDrop,
-                eventResize: $scope.alertOnResize,
-                eventRender: $scope.eventRender
-              }
-            };
- 
+                .error(function (err) {
+                    console.log("Err", err)
+                })
+    })
+
+
+
+
+    $scope.uiConfig = {
+        calendar: {
+            height: 450,
+            editable: true,
+            header: {
+                left: '',
+                center: 'title',
+                right: 'today prev,next'
+            },
+            defaultView: 'month',
+            defaultDate: new Date(),
+            eventClick: $scope.alertOnEventClick,
+            eventDrop: $scope.alertOnDrop,
+            eventResize: $scope.alertOnResize,
+            eventRender: $scope.eventRender
+        }
+    };
+
 // console.log("$scope.uiConfig", $scope.uiConfig)
-            //$scope.uiConfig.gotoDate(new Date("08-01-2017"))
- 
-        Date.prototype.addDays = function(days) {
+    //$scope.uiConfig.gotoDate(new Date("08-01-2017"))
+
+    Date.prototype.addDays = function (days) {
         var dat = new Date(this.valueOf());
         dat.setDate(dat.getDate() + days);
         return dat;
-        }
- 
-        //var enddate= new Date()
- 
-        var startDate = $filter("date")(new Date(), 'yyyy-MM-dd');
-        var endDate = $filter("date")((new Date()).addDays(30), 'yyyy-MM-dd');
-Appointment.getAppointmentStartDate(startDate, endDate).success(function(res) {
-    console.log("succeesss2",res)
- 
-    var eventObj = [];
-    var Dates;        
-            
-    for (var i = 0; i < res.length; i++) {
-        Dates= $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
-        if (eventObj.hasOwnProperty(Dates)) {
-            eventObj[Dates]++;
-        }else{
-            eventObj[Dates] = 1;
-        }
     }
-    // console.log("eventObj", eventObj)
-    // console.log("eventObj lenght", eventObj.length)
-    // if (args.selectedView == "7" || args.selectedView == "30") {
-        for(key in eventObj){
-            // console.log("key "+ key + ", value "+eventObj[key])
-            $scope.events.push({title: 'Appointments : '+eventObj[key], start: new Date(key)})
+
+    //var enddate= new Date()
+
+    var startDate = $filter("date")(new Date(), 'yyyy-MM-dd');
+    var endDate = $filter("date")((new Date()).addDays(30), 'yyyy-MM-dd');
+    Appointment.getAppointmentStartDate(startDate, endDate).success(function (res) {
+        console.log("succeesss2", res)
+
+        var eventObj = [];
+        var Dates;
+
+        for (var i = 0; i < res.length; i++) {
+            Dates = $filter("date")(res[i].AppointmentDate, 'yyyy-MM-dd');
+            if (eventObj.hasOwnProperty(Dates)) {
+                eventObj[Dates]++;
+            } else {
+                eventObj[Dates] = 1;
+            }
         }
-    // }else{
-    //     for (var i = 0; i < res.length; i++) {
-    //         $scope.events.push({title: res[i].CustomerName, start: new Date(res[i].AppointmentStartTime), end: new Date(res[i].AppointmentEndTime)})
-    //     }
-    // }
-})
-.error(function(err) {
-    console.log("Err",err)
-})
- 
-    $scope.changeLang = function() {
-      if($scope.changeTo === 'Hungarian'){
-        $scope.uiConfig.calendar.dayNames = ["Vasárnap", "Hétfo", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
-        $scope.uiConfig.calendar.dayNamesShort = ["Vas", "Hét", "Kedd", "Sze", "Csüt", "Pén", "Szo"];
-        $scope.changeTo= 'English';
-      } else {
-        $scope.uiConfig.calendar.dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        $scope.uiConfig.calendar.dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        $scope.changeTo = 'Hungarian';
-      }
+        // console.log("eventObj", eventObj)
+        // console.log("eventObj lenght", eventObj.length)
+        // if (args.selectedView == "7" || args.selectedView == "30") {
+        for (key in eventObj) {
+            // console.log("key "+ key + ", value "+eventObj[key])
+            $scope.events.push({title: 'Appointments : ' + eventObj[key], start: new Date(key)})
+        }
+        // }else{
+        //     for (var i = 0; i < res.length; i++) {
+        //         $scope.events.push({title: res[i].CustomerName, start: new Date(res[i].AppointmentStartTime), end: new Date(res[i].AppointmentEndTime)})
+        //     }
+        // }
+    })
+            .error(function (err) {
+                console.log("Err", err)
+            })
+
+    $scope.changeLang = function () {
+        if ($scope.changeTo === 'Hungarian') {
+            $scope.uiConfig.calendar.dayNames = ["Vasárnap", "Hétfo", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
+            $scope.uiConfig.calendar.dayNamesShort = ["Vas", "Hét", "Kedd", "Sze", "Csüt", "Pén", "Szo"];
+            $scope.changeTo = 'English';
+        } else {
+            $scope.uiConfig.calendar.dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            $scope.uiConfig.calendar.dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            $scope.changeTo = 'Hungarian';
+        }
     };
     /* event sources array*/
     $scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];

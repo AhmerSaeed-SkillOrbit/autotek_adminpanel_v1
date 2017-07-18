@@ -20,18 +20,18 @@ html[dir="rtl"] .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
     right: auto;
 }
 html[dir="rtl"] .main-header .sidebar-toggle {
-	float: right;
+    float: right;
 }
 @media (min-width: 768px) {
-html[dir="rtl"] .sidebar-mini.sidebar-collapse .content-wrapper, html[dir="rtl"] .sidebar-mini.sidebar-collapse .right-side, html[dir="rtl"] .sidebar-mini.sidebar-collapse .main-footer {
-    margin-left: 0 !important;
-    z-index: 840;
-    margin-right: 50px;
-}
-html[dir="rtl"] .sidebar-mini.sidebar-collapse .main-header .navbar {
-    margin-left: 0px;
-    margin-right: 50px;
-}
+    html[dir="rtl"] .sidebar-mini.sidebar-collapse .content-wrapper, html[dir="rtl"] .sidebar-mini.sidebar-collapse .right-side, html[dir="rtl"] .sidebar-mini.sidebar-collapse .main-footer {
+        margin-left: 0 !important;
+        z-index: 840;
+        margin-right: 50px;
+    }
+    html[dir="rtl"] .sidebar-mini.sidebar-collapse .main-header .navbar {
+        margin-left: 0px;
+        margin-right: 50px;
+    }
 }
 .clearfix {
     clear:both;
@@ -173,23 +173,23 @@ table td.device-type .fa-android {
 }
 /* -------Loader Css-----*/
 .loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 70px;
-  height: 70px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 70px;
+    height: 70px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .spinner-wave {
@@ -214,32 +214,32 @@ table td.device-type .fa-android {
 .spinner-wave div:nth-child(2) {
     -webkit-animation-delay: -1.4s;
     -moz-animation-delay: -1.4s;
-	-ms-animation-delay: -1.4s;
-	-o-animation-delay: -1.4s;
+    -ms-animation-delay: -1.4s;
+    -o-animation-delay: -1.4s;
     animation-delay: -1.4s;
 }
 
 .spinner-wave div:nth-child(3) {
     -webkit-animation-delay: -1.2s;
     -moz-animation-delay: -1.2s;
-	-ms-animation-delay: -1.2s;
-	-o-animation-delay: -1.2s;
+    -ms-animation-delay: -1.2s;
+    -o-animation-delay: -1.2s;
     animation-delay: -1.2s;
 }
 
 .spinner-wave div:nth-child(4) {
     -webkit-animation-delay: -1.0s;
     -moz-animation-delay: -1.0s;
-	-ms-animation-delay: -1.0s;
-	-o-animation-delay: -1.0s;
+    -ms-animation-delay: -1.0s;
+    -o-animation-delay: -1.0s;
     animation-delay: -1.0s;
 }
 
 .spinner-wave div:nth-child(5) {
     -webkit-animation-delay: -0.8s;
     -moz-animation-delay: -0.8s;
-	-ms-animation-delay: -0.8s;
-	-o-animation-delay: -0.8s;
+    -ms-animation-delay: -0.8s;
+    -o-animation-delay: -0.8s;
     animation-delay: -0.8s;
 }
 
@@ -267,4 +267,9 @@ table td.device-type .fa-android {
 .inactive-tabs {
     padding: 0px;
     border-bottom: none;
+}
+
+.li_disabled {
+    pointer-events:none; //This makes it not clickable
+    opacity:0.1;         //This grays it out to look disabled
 }
