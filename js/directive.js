@@ -169,7 +169,7 @@ angular.module('Autotek.directive', [])
                                         'Authorization': "Bearer" + " " + result.access_token
                                     }
                                 }).success(function (res) {
-                                    console.log('scucessfully saved', res);
+                                    console.log('slots are available', res);
                                     scope.appointments = {
                                         selectedOption: { starttime: 0, endtime: 0},
                                         availableOptions: res
@@ -192,10 +192,12 @@ angular.module('Autotek.directive', [])
 //                    $window.location.reload();
                                 })
                                         .error(function (err) {
-                                            console.log('error in saving');
+                                            console.log('slots not available',err);
 //                            $scope.loaderr = false    
-//                            $scope.errorText = err.Message;
-//                            $scope.showErrorAlert = true;
+                            scope.errorText = err;
+                            $rootScope.$broadcast('AppointmentNotAvailable', {err: scope.errorText})
+                           
+                          
 //                            console.log(err)
 //                            $scope.isDataLoading = false;
                                         });

@@ -17,6 +17,10 @@
     <section class="content">
         <div class="box box-default">
             <div class="box-body">
+                <div class="alert alert-danger" ng-show="showErrorAlert">
+                    <button type="button" class="close" data-ng-click="switchBool('showErrorAlert')">×</button>
+                    <strong>{{errorText}}</strong> 
+                </div>
                 <div class="form-horizontal">
                     <br><br>
                     <div class="row form-group">
@@ -89,6 +93,11 @@
                         <div class="col-md-12">
                             <br><div class="btn btn-primary" ng-class="{
                                         'spinner-wave' : loaderr == true}" ng-click="scheduleAppointment()"><span ng-if="!loaderr">Schedule</span>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
                             </div>
                             <div class="col-md-6">
                                 <div></div>

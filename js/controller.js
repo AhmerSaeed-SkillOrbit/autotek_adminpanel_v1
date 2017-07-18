@@ -179,21 +179,54 @@ app.controller('AppSingleuser', function ($scope, User, $stateParams, $state) {
         $scope.showSuccessAlert = false;
         $scope.showErrorAlert = false;
         $scope.errorText = "";
-        $scope.passwordCustom = {
-            "User_GUID": $scope.singleUser.User_GUID,
-            "NewPassword": $scope.NewPassword
+
+        var errors = [];
+        if ($scope.NewPassword == null || $scope.NewPassword == "") {
+            errors.push({message: 'New Password is required'})
         }
-        User.changePassword($scope.passwordCustom).success(function () {
-            console.log(res);
+
+        if (errors.length != 0) {
+            console.log('errors occured');
+            // $scope.errorText = "First Name, Last Name , Mobile Number , Email , Password Or ERP Reference is Empty";
+
+            $scope.errorText = "";
+            for (var i = 0; i < errors.length; i++) {
+                console.log('errors occured',errors[i].message);
+                if(errors.length-2 > i){
+                    $scope.errorText += errors[i].message + ", ";
+                }else if(errors.length-2 == i){
+                    $scope.errorText += errors[i].message + " and ";
+                }
+                else if(errors.length-1 == i) {
+                    $scope.errorText += errors[i].message + "";
+                }
+            }
+
+            $scope.showErrorAlert = true;
+            $scope.switchBool = function (value) {
+                $scope[value] = !$scope[value];
+                // $scope.loaderr = false;
+            };
             $scope.loaderr = false;
-            $scope.showSuccessAlert = true;
-        })
-                .error(function (err) {
-                    console.log(err);
-                    $scope.loaderr = false
-                    $scope.errorText = err.Message;
-                    $scope.showErrorAlert = true;
-                })
+
+
+        }else{
+            $scope.passwordCustom = {
+                "User_GUID": $scope.singleUser.User_GUID,
+                "NewPassword": $scope.NewPassword
+            }
+            User.changePassword($scope.passwordCustom).success(function () {
+                console.log(res);
+                $scope.loaderr = false;
+                $scope.showSuccessAlert = true;
+            })
+                    .error(function (err) {
+                        console.log(err);
+                        $scope.loaderr = false
+                        $scope.errorText = err;
+                        $scope.showErrorAlert = true;
+                    })
+        }
     }
     // Change Password Function Starts //
     $scope.deleteUser = function (deleteId) {
@@ -237,30 +270,91 @@ app.controller('AppSingleuser', function ($scope, User, $stateParams, $state) {
         $scope.showSuccessAlert = false;
         $scope.showErrorAlert = false;
         $scope.errorText = "";
-        $scope.singleUsercustom = {
-            "Id": $scope.singleUser.Id,
-            "FirstName": $scope.singleUser.FirstName,
-            "LastName": $scope.singleUser.LastName,
-            "MobileNumber": $scope.singleUser.MobileNumber,
-            "EmailAddress": $scope.singleUser.EmailAddress,
-            "ERPReference": $scope.singleUser.referenceNo
+
+        var errors = [];
+        if ($scope.singleUser.FirstName == null || $scope.singleUser.FirstName == "") {
+            errors.push({message: 'First Name is required'})
         }
 
-        console.log('singleUserrrr', $scope.singleUsercustom);
-        User.UpdateSingleAppUser($scope.singleUsercustom).success(function (res) {
-            console.log(res);
+        if ($scope.singleUser.LastName == null || $scope.singleUser.LastName == "") {
+            errors.push({message: 'Last Name is required'})
+        }
+
+        if ($scope.singleUser.MobileNumber == null || $scope.singleUser.MobileNumber == "") {
+            errors.push({message: 'Mobile Number is required'})
+        }
+
+        if ($scope.singleUser.EmailAddress == null || $scope.singleUser.EmailAddress == "") {
+            errors.push({message: 'Email is required'});
+        }
+        // else {
+        //     var email = $scope.addUser.EmailAddress.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({message: 'Not a valid email'});
+        //     }
+        // }
+
+        // if ($scope.addUser.Password == null || $scope.addUser.Password == "") {
+        //     errors.push({message: 'Password is required'})
+        // }
+        if ($scope.singleUser.referenceNo == null || $scope.singleUser.referenceNo == "") {
+            errors.push({message: 'ERP Reference Number is required'})
+        }
+
+
+
+
+        if (errors.length != 0) {
+            console.log('errors occured');
+            // $scope.errorText = "First Name, Last Name , Mobile Number , Email , Password Or ERP Reference is Empty";
+
+            $scope.errorText = "";
+            for (var i = 0; i < errors.length; i++) {
+                console.log('errors occured',errors[i].message);
+                if(errors.length-2 > i){
+                    $scope.errorText += errors[i].message + ", ";
+                }else if(errors.length-2 == i){
+                    $scope.errorText += errors[i].message + " and ";
+                }
+                else if(errors.length-1 == i) {
+                    $scope.errorText += errors[i].message + "";
+                }
+            }
+
+            $scope.showErrorAlert = true;
+            $scope.switchBool = function (value) {
+                $scope[value] = !$scope[value];
+                // $scope.loaderr = false;
+            };
             $scope.loaderr = false;
-            $scope.showSuccessAlert = true;
-            console.log('successfuly updated');
-            $scope.isDataLoading = false;
-        })
-                .error(function function_name(err) {
-                    console.log(err);
-                    $scope.loaderr = false
-                    $scope.errorText = err.Message;
-                    $scope.showErrorAlert = true;
-                    $scope.isDataLoading = false;
-                })
+
+
+        }else{
+            $scope.singleUsercustom = {
+                "Id": $scope.singleUser.Id,
+                "FirstName": $scope.singleUser.FirstName,
+                "LastName": $scope.singleUser.LastName,
+                "MobileNumber": $scope.singleUser.MobileNumber,
+                "EmailAddress": $scope.singleUser.EmailAddress,
+                "ERPReference": $scope.singleUser.referenceNo
+            }
+
+            console.log('singleUserrrr', $scope.singleUsercustom);
+            User.UpdateSingleAppUser($scope.singleUsercustom).success(function (res) {
+                console.log(res);
+                $scope.loaderr = false;
+                $scope.showSuccessAlert = true;
+                console.log('successfuly updated');
+                $scope.isDataLoading = false;
+            })
+                    .error(function function_name(err) {
+                        console.log(err);
+                        $scope.loaderr = false
+                        $scope.errorText = err.Message;
+                        $scope.showErrorAlert = true;
+                        $scope.isDataLoading = false;
+                    })
+        }
     }
 })
 app.controller('SingleSalesAgent', function ($scope, User, $stateParams, $state) {
@@ -430,48 +524,166 @@ app.controller('SingleCompany', function ($scope, User, $stateParams, $state) {
         $scope.showSuccessAlert = false;
         $scope.showErrorAlert = false;
         $scope.errorText = "";
-        $scope.singleCompanyCustom = {
-            "Id": $scope.SingleCompany.Id,
-            "CompanyName": $scope.SingleCompany.CompanyName,
-            "CompanyNameInArabic": $scope.SingleCompany.CompanyName,
-            "PhoneNumber": $scope.SingleCompany.ContactPhone,
-            "EmailAddress": $scope.SingleCompany.ContactEmail,
-            "Address": "Jeddah, KSA",
-            "IsActive": $scope.SingleCompany.AccountStatus,
-            "ERPReference": $scope.SingleCompany.CompanyErpRerence,
-            "Contacts": [{
-                    "PersonName": $scope.SingleCompany.ContactPerson,
-                    "TelephoneNumber": $scope.SingleCompany.ContactPhone,
-                    "EmailAddress": $scope.SingleCompany.ContactEmail,
-                    "OtherContactDetails": $scope.SingleCompany.OtherContact
-                }, {
-                    "PersonName": $scope.SingleCompany.ContactPerson1,
-                    "TelephoneNumber": $scope.SingleCompany.ContactPhone1,
-                    "EmailAddress": $scope.SingleCompany.ContactEmail1,
-                    "OtherContactDetails": $scope.SingleCompany.OtherContact
-                }],
-            "ComissionDetails": [{
-                    "CommissionRate": $scope.SingleCompany.CompanyCommission,
-                    "IsPercentage": $scope.SingleCompany.CompanyCommissionType,
-                    "PaymentMethod": $scope.SingleCompany.OtherPaymentMethods,
-                    "BankDetails": $scope.SingleCompany.BankAccountDetails
-                }]
+
+        var errors = [];
+        if ($scope.SingleCompany.CompanyName == null || $scope.SingleCompany.CompanyName == "") {
+            errors.push({ message: 'Name (En) is required' })
         }
-        User.UpdateCompany($scope.singleCompanyCustom).success(function (res) {
-            console.log(res);
-            // console.log(SingleCompany)
+
+        if ($scope.SingleCompany.CompanyNameInArabic == null || $scope.SingleCompany.CompanyNameInArabic == "") {
+            errors.push({ message: 'Name (Ar) is required' })
+        }
+
+        if ($scope.SingleCompany.ContactPhone == null || $scope.SingleCompany.ContactPhone == "") {
+            errors.push({ message: 'Contact Number is required' })
+        }
+
+        if ($scope.SingleCompany.Address == null || $scope.SingleCompany.Address == "") {
+            errors.push({ message: 'Address is required' })
+        }
+
+        if ($scope.SingleCompany.ContactEmail == null || $scope.SingleCompany.ContactEmail == "") {
+            errors.push({ message: 'Email is required' });
+        } 
+        // else {
+        //     var email = $scope.addCompany.Email.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({ message: 'Not a valid email' });
+        //     }
+        // }
+
+        if ($scope.SingleCompany.ContactPhone == null || $scope.SingleCompany.ContactPhone == "") {
+            errors.push({ message: 'Primary Contact is required' })
+        }
+
+        if ($scope.SingleCompany.ContactPhone1 == null || $scope.SingleCompany.ContactPhone1 == "") {
+            errors.push({ message: 'Primary Phone is required' })
+        }
+
+        if ($scope.SingleCompany.ContactEmail == null || $scope.SingleCompany.ContactEmail == "") {
+            errors.push({ message: 'Primary Email is required' });
+        }
+        // else {
+        //     var email = $scope.addCompany.PrimaryEmail.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({ message: 'Not a valid primary email' });
+        //     }
+        // }
+
+        if ($scope.SingleCompany.ContactPerson1 == null || $scope.SingleCompany.ContactPerson1 == "") {
+            errors.push({ message: 'Secondary Contact is required' })
+        }
+
+        if ($scope.SingleCompany.ContactPhone1 == null || $scope.SingleCompany.ContactPhone1 == "") {
+            errors.push({ message: 'Secondary Phone is required' })
+        }
+
+        if ($scope.SingleCompany.SecondaryEmail == null || $scope.SingleCompany.SecondaryEmail == "") {
+            errors.push({ message: 'Secondary Email is required' });
+        } 
+        // else {
+        //     var email = $scope.addCompany.SecondaryEmail.match($scope.regex);
+        //     if (email == null) {
+        //         errors.push({ message: 'Not a valid secondary email' });
+        //     }
+        // }
+
+        // if ($scope.SingleCompany.PrimaryOtherContact == null || $scope.SingleCompany.PrimaryOtherContact == "") {
+        //     errors.push({ message: 'Other Contact Details is required' })
+        // }
+        
+        if ($scope.SingleCompany.OtherContact == null || $scope.SingleCompany.OtherContact == "") {
+            errors.push({ message: 'Other Contact is required' })
+        }
+
+        if ($scope.SingleCompany.BankAccountDetails == null || $scope.SingleCompany.BankAccountDetails == "") {
+            errors.push({ message: 'Bank Detail is required' })
+        }
+
+        if ($scope.SingleCompany.OtherPaymentMethods == null || $scope.SingleCompany.OtherPaymentMethods == "") {
+            errors.push({ message: 'Other Payment Methods is required' })
+        }
+
+        if ($scope.SingleCompany.CompanyCommission == null || $scope.SingleCompany.CompanyCommission == "") {
+            errors.push({ message: 'Company Commission is required' })
+        }
+
+        if ($scope.SingleCompany.AccountStatus == null || $scope.SingleCompany.AccountStatus == "") {
+            errors.push({ message: 'Status is required' })
+        }
+
+        if ($scope.SingleCompany.CompanyErpRerence == null || $scope.SingleCompany.CompanyErpRerence == "") {
+            errors.push({ message: 'Erp Rerence Number is required' })
+        }
+
+
+        if (errors.length != 0) {
+            console.log('errors occured',errors);
+            // $scope.errorText = "Name (En), Name (Ar) , Phone Number , Address , Email , Primary Contact , Primary Phone , Primary Email , Other Contact Details , Secondary Contact , Secondary Phone , Secondary Email , Other Contact , Bank Detail , Other Payment Methods , Company Commission , Status Or ERP Reference Number is Empty";
+            $scope.errorText = "";
+            for (var i = 0; i < errors.length; i++) {
+                console.log('errors occured',errors[i].message);
+                if(errors.length-2 > i){
+                    $scope.errorText += errors[i].message + ", ";
+                }else if(errors.length-2 == i){
+                    $scope.errorText += errors[i].message + " and ";
+                }
+                else if(errors.length-1 == i) {
+                    $scope.errorText += errors[i].message + "";
+                }
+            }
+            $scope.showErrorAlert = true;
+            $scope.switchBool = function(value) {
+                $scope[value] = !$scope[value];
+                // $scope.loaderr = false;
+            };
             $scope.loaderr = false;
-            $scope.showSuccessAlert = true;
-            console.log('company successfuly updated');
-            $scope.isDataLoading = false;
-        })
-                .error(function function_name(err) {
-                    console.log(err);
-                    $scope.loaderr = false
-                    $scope.errorText = err.Message;
-                    $scope.showErrorAlert = true;
-                    $scope.isDataLoading = false;
-                })
+        } else {
+
+            $scope.singleCompanyCustom = {
+                "Id": $scope.SingleCompany.Id,
+                "CompanyName": $scope.SingleCompany.CompanyName,
+                "CompanyNameInArabic": $scope.SingleCompany.CompanyName,
+                "PhoneNumber": $scope.SingleCompany.ContactPhone,
+                "EmailAddress": $scope.SingleCompany.ContactEmail,
+                "Address": "Jeddah, KSA",
+                "IsActive": $scope.SingleCompany.AccountStatus,
+                "ERPReference": $scope.SingleCompany.CompanyErpRerence,
+                "Contacts": [{
+                        "PersonName": $scope.SingleCompany.ContactPerson,
+                        "TelephoneNumber": $scope.SingleCompany.ContactPhone,
+                        "EmailAddress": $scope.SingleCompany.ContactEmail,
+                        "OtherContactDetails": $scope.SingleCompany.OtherContact
+                    }, {
+                        "PersonName": $scope.SingleCompany.ContactPerson1,
+                        "TelephoneNumber": $scope.SingleCompany.ContactPhone1,
+                        "EmailAddress": $scope.SingleCompany.ContactEmail1,
+                        "OtherContactDetails": $scope.SingleCompany.OtherContact
+                    }],
+                "ComissionDetails": [{
+                        "CommissionRate": $scope.SingleCompany.CompanyCommission,
+                        "IsPercentage": $scope.SingleCompany.CompanyCommissionType,
+                        "PaymentMethod": $scope.SingleCompany.OtherPaymentMethods,
+                        "BankDetails": $scope.SingleCompany.BankAccountDetails
+                    }]
+            }
+            User.UpdateCompany($scope.singleCompanyCustom).success(function (res) {
+                console.log(res);
+                // console.log(SingleCompany)
+                $scope.loaderr = false;
+                $scope.showSuccessAlert = true;
+                console.log('company successfuly updated');
+                $scope.showErrorAlert = false;
+                $scope.isDataLoading = false;
+            })
+                    .error(function function_name(err) {
+                        console.log(err);
+                        $scope.loaderr = false
+                        $scope.errorText = err.Message;
+                        $scope.showErrorAlert = true;
+                        $scope.isDataLoading = false;
+                    })
+        }
     }
     //--------- Delete Company ---------
     $scope.deleteCompany = function (deleteId) {
@@ -904,7 +1116,7 @@ app.controller('notificationCtrl', function ($scope, User, $http, $state, $rootS
     $scope.selectedDevice = $scope.devices[0];
 
 
-    $scope.To = ["All", "Selected Company"];
+    $scope.To = ["All", "Selected Company", "Un-Registered"];
     $scope.selectedCompany = $scope.To[0];
 
     $scope.selectedCompanyChanged = function () {
@@ -1034,7 +1246,7 @@ app.controller('addNewAppUser', function ($scope, User, $http) {
             errors.push({message: 'Password is required'})
         }
         if ($scope.addUser.referenceNo == null || $scope.addUser.referenceNo == "") {
-            errors.push({message: 'Reference Number is required'})
+            errors.push({message: 'ERP Reference Number is required'})
         }
 
 
@@ -1042,7 +1254,21 @@ app.controller('addNewAppUser', function ($scope, User, $http) {
 
         if (errors.length != 0) {
             console.log('errors occured');
-            $scope.errorText = "First Name, Last Name , Mobile Number , Email , Password Or ERP Reference is Empty";
+            // $scope.errorText = "First Name, Last Name , Mobile Number , Email , Password Or ERP Reference is Empty";
+
+            $scope.errorText = "";
+            for (var i = 0; i < errors.length; i++) {
+                console.log('errors occured',errors[i].message);
+                if(errors.length-2 > i){
+                    $scope.errorText += errors[i].message + ", ";
+                }else if(errors.length-2 == i){
+                    $scope.errorText += errors[i].message + " and ";
+                }
+                else if(errors.length-1 == i) {
+                    $scope.errorText += errors[i].message + "";
+                }
+            }
+
             $scope.showErrorAlert = true;
             $scope.switchBool = function (value) {
                 $scope[value] = !$scope[value];
@@ -2383,6 +2609,13 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
     $rootScope.$on('AppointmentDataChanged', function (evt, args) {
         console.log("data is", args.data);
         $scope.appointments = args.data.availableOptions;
+        $scope.showErrorAlert = false;
+    });
+    $rootScope.$on('AppointmentNotAvailable', function (evt, args) {
+        console.log("data is", args.err);
+        $scope.appointments = [];
+        $scope.showErrorAlert = true;
+        $scope.errorText = args.err;
     });
 
 
@@ -2424,12 +2657,13 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
 
 //    saving form
     $scope.scheduleAppointment = function () {
-//        console.log("searchedCustomer", $scope.searchedCustomer);
-//        console.log("searchedCustomer", $scope.selectedBranch);
-//        console.log("searchedCustomer", $scope.selectedServices);
-//        console.log("searchedCustomer", $scope.selectdDate);
-//        console.log("searchedCustomer", $scope.selectStartTime);
-//        console.log("searchedCustomer", $scope.selectEndTime);
+       console.log("searchedCustomer", $scope.finalObj.CustomerId);
+       console.log("selectedBranch", $scope.finalObj.AppointmentSlot.BranchId);
+       console.log("selectedServices", $scope.finalObj.TypeOfService);
+       console.log("selectdDate", $scope.dateObj.selectdDate);
+       console.log("selectdAppointment", $scope.finalObj.mixtime);
+       console.log("selectStartTime", $scope.finalObj.selectStartTime);
+       console.log("selectEndTime", $scope.finalObj.selectEndTime);
 
 //        $scope.switchBool = function (value) {
 //            $scope[value] = !$scope[value];
@@ -2440,22 +2674,73 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
 //        $scope.showSuccessAlertDelete = false;
 //        $scope.showErrorAlert = false;
 //        $scope.errorText = "";
+        var errors = [];
+        if ($scope.finalObj.CustomerId == null || $scope.finalObj.CustomerId == "") {
+            errors.push({message: 'Customer is required'})
+        }
 
-        if ($scope.searchedCustomer != "" && $scope.selectedBranch != "" && $scope.selectedServices != "" && $scope.selectdDate != "" && $scope.selectStartTime != "" && $scope.selectEndTime != "") {
+        if ($scope.finalObj.AppointmentSlot.BranchId == null || $scope.finalObj.AppointmentSlot.BranchId == "") {
+            errors.push({message: 'Branch is required'})
+        }
+
+        if ($scope.finalObj.TypeOfService == null || $scope.finalObj.TypeOfService == "") {
+            errors.push({message: 'Services is required'})
+        }
+
+        // if ($scope.dateObj.selectdDate == null || $scope.dateObj.selectdDate == "") {
+        //     errors.push({message: 'Date is required'})
+        // }
+
+        if ($scope.finalObj.mixtime == null || $scope.finalObj.mixtime == "") {
+            errors.push({message: 'Select Appointment is required'})
+        }
+
+
+
+
+        if (errors.length != 0) {
+            console.log('errors occured');
+            // $scope.errorText = "First Name, Last Name , Mobile Number , Email , Password Or ERP Reference is Empty";
+
+            $scope.errorText = "";
+            for (var i = 0; i < errors.length; i++) {
+                console.log('errors occured',errors[i].message);
+                if(errors.length-2 > i){
+                    $scope.errorText += errors[i].message + ", ";
+                }else if(errors.length-2 == i){
+                    $scope.errorText += errors[i].message + " and ";
+                }
+                else if(errors.length-1 == i) {
+                    $scope.errorText += errors[i].message + "";
+                }
+            }
+
+            $scope.showErrorAlert = true;
+            $scope.switchBool = function (value) {
+                $scope[value] = !$scope[value];
+                // $scope.loaderr = false;
+            };
+            $scope.loaderr = false;
+
+
+        }else{
+
+
+        // if ($scope.searchedCustomer != "" && $scope.selectedBranch != "" && $scope.selectedServices != "" && $scope.selectdDate != "" && $scope.selectStartTime != "" && $scope.selectEndTime != "") {
             var params = "grant_type=client_credentials&client_id=Android01&client_secret=21B5F798-BE55-42BC-8AA8-0025B903DC3B&scope=app1";
             var formatedDate = $filter("date")($rootScope.appointDate, 'yyyy-MM-dd');
             var startTime = formatedDate + ' ' + $filter("date")($scope.selectStartTime, 'hh:mm a');
             var endTime = formatedDate + ' ' + $filter("date")($scope.selectEndTime, 'hh:mm a');
-            $scope.scheduleAppointmentObject = {
-                CustomerId: $scope.searchedCustomer,
-                TypeOfService: $scope.selectedServices,
-                AppointmentSlot: {BranchId: $scope.selectedBranch, AppointmentDate: formatedDate, StartTime: startTime, EndTime: endTime}
-            };
+            // $scope.scheduleAppointmentObject = {
+            //     CustomerId: $scope.searchedCustomer,
+            //     TypeOfService: $scope.selectedServices,
+            //     AppointmentSlot: {BranchId: $scope.selectedBranch, AppointmentDate: formatedDate, StartTime: startTime, EndTime: endTime}
+            // };
 
             $scope.finalObj.AppointmentSlot.AppointmentDate = formatedDate;
             $scope.finalObj.AppointmentSlot.StartTime = formatedDate + ' ' + $scope.finalObj.mixtime.split("-")[0]
             $scope.finalObj.AppointmentSlot.EndTime = formatedDate + ' ' + $scope.finalObj.mixtime.split("-")[1]
-            console.log('ready object now', $scope.scheduleAppointmentObject);
+            console.log('ready object now', $scope.finalObj);
             var url = "http://autotecauth.azurewebsites.net/identity/connect/token";
             $http.post(url, params, {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
@@ -2468,6 +2753,7 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
                     console.log('scucessfully saved');
 
                     $scope.loaderr = false;
+                    $scope.showErrorAlert = false;
 //                    $scope.showSuccessAlert = true;
 //                    $scope.isDataLoading = false;
 //                    $window.location.reload();
@@ -2475,16 +2761,17 @@ app.controller('scheduleAppointment', function ($stateParams, $scope, User, Appo
                         .error(function (err) {
                             console.log('error in saving');
                             $scope.loaderr = false;
-//                            $scope.errorText = err.Message;
-//                            $scope.showErrorAlert = true;
+                           $scope.errorText = err;
+                           $scope.showErrorAlert = true;
 //                            console.log(err)
 //                            $scope.isDataLoading = false;
                         });
 
             });
-        } else {
-            alert("Please fill all the fields first");
-            $scope.loaderr = false;
+        // } else {
+        //     alert("Please fill all the fields first");
+        //     $scope.loaderr = false;
+        // }
         }
 
     }
