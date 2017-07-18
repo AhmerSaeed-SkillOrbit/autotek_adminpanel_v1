@@ -502,7 +502,6 @@ angular.module('CoreApi', ['CoreApiUtilities'])
                 this.getBranchWorkingDays = function(branchId) {
                      var config = httpService.Utils.getHeader();
                      var url = httpService.Utils.buildUrl(new Array('api', 'branch',branchId,'workingdays'));
-                     console.log("Get Branch Working Days" , url);
                      return httpService.$http.get(url, config);
 
                  }

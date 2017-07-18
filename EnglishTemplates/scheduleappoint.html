@@ -22,18 +22,15 @@
                     <div class="row form-group">
                         <div class="col-md-12">
                             <div class="col-md-6">
-                                <label for="inputName" class="col-md-4 control-label">Search Customer</label>
+                                <label for="inputName" class="col-md-4 control-label">Customer</label>
                                 <div class="col-md-8">
-                                    <input type="text" ng-model="finalObj.CustomerId" ng-blur="searchCustomerByNameNMobile()" class="form-control" placeholder="Search Customer" autocomplete="off">
+                                    <input type="text" ng-model="CustomerName" class="form-control" placeholder="Search Customer" autocomplete="" disabled="true">
+                                    <input type="hidden" ng-model="finalObj.CustomerId" class="form-control" placeholder="Search Customer" autocomplete="" disabled="true">
                                 </div>
                             </div>
                             <div class="row form-group">
                                 <label for="inputName" class="col-sm-2 control-label">Select City</label>
                                 <div class="col-sm-4">
-                                    <!-- <select class="form-control" ng-model="selectedCity" ng-change="cityChanged();">
-                                        <option ng-repeat="Cities in allCities" value="{{Cities.CityId}}">{{Cities.CityName}}</option>
-                                    </select> -->
-
                                     <select class="form-control" name="citySelect" ng-options="option.CityName for option in cities.availableOptions track by option.Id" ng-model="cities.selectedOption" ng-change="cityChanged()">
                                     </select> 
                                 </div>

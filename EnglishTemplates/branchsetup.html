@@ -194,7 +194,7 @@
                                             </tr>
                                         </thead>
                                         <tbody ng-if="!isDataLoading">
-                                            <tr ng-repeat="x in allServices">
+                                            <tr ng-repeat="x in $root.allServices">
                                                 <td>
                                                     <input type="checkbox" ng-model="x.checked">
                                                 </td>
@@ -250,7 +250,7 @@
                                 <div class="row form-group">
                                     <div class="col-md-6">
                                         <label for="inputName" class="control-label">Select Shift Year</label>
-                                        <select class="form-control" ng-model="addShiftObj.ShiftYearId">
+                                        <select class="form-control" ng-model="addShiftObj.ShiftYearId" ng-change="getBranchShifts()">
                                             <option ng-repeat="x in $root.ShiftYears" value="{{x.Id}}" ng-selected="x.Id == addShiftObj.ShifttYearId"> {{x.YearTitle_En}}</option>
                                         </select>
                                     </div>      
