@@ -21,6 +21,7 @@
                     <button type="button" class="close" data-ng-click="switchBool('showSuccessAlert')">×</button>
                     <strong>Branch added Sucessfully</strong>
                 </div>
+                
                 <div class="alert alert-danger" ng-show="showSuccessAlertDelete">
                     <button type="button" class="close" data-ng-click="switchBool('showSuccessAlertDelete')">×</button>
                     <strong>Branch deleted successfuly</strong>
@@ -44,6 +45,7 @@
                 <div class="pull-right box-tools">
                     <button class="btn btn-danger" ng-value="$root.btnCaption" ng-click="showMainBranchInfoForm()" ng-if="showAddNewButton"><i class="fa fa-file-o"></i>{{$root.btnCaption}}</button>
                 </div>
+                
                 <div class="tab-content" ng-class="{
                         'inactive-tabs'
                                 : !$root.branchtabs[0] }" ng-controller="BranchMainInfo">
@@ -52,6 +54,10 @@
                                     : $root.branchtabs[0]}" id="branchform1">
                         <div class="form-horizontal">
                             <div style="" id="mainInfoFormDiv" ng-if="showBranchMainInfoForm">
+                                <div class="alert alert-danger" ng-show="showErrorAlert" > 
+                                    <button type="button" class="close" data-ng-click="switchBool('showErrorAlert')">×</button>
+                                    <strong>{{errorText}}</strong> 
+                                </div>
                                 <legend>Basic Details</legend>
                                 <div class="row form-group">
                                     <label for="inputName" class="col-sm-2 control-label">Name (English)</label>
