@@ -1607,7 +1607,7 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
         $scope.loaderr = true;
 
 
-        
+
 
         var errors = [];
 
@@ -1643,17 +1643,17 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
             // $scope.errorText = "Name (English), Name (Arabic), Address , GPS (Longitude) , GPS (Latitude) Or City is Empty";
             $scope.errorText = "";
             for (var i = 0; i < errors.length; i++) {
-                console.log('errors occured',errors[i].message);
-                if(errors.length-2 > i){
+                console.log('errors occured', errors[i].message);
+                if (errors.length - 2 > i) {
                     $scope.errorText += errors[i].message + ", ";
-                }else if(errors.length-2 == i){
+                } else if (errors.length - 2 == i) {
                     $scope.errorText += errors[i].message + " and ";
                 }
-                else if(errors.length-1 == i) {
+                else if (errors.length - 1 == i) {
                     $scope.errorText += errors[i].message + "";
                 }
-                
-                
+
+
             }
             $scope.showErrorAlert = true;
             $scope.switchBool = function (value) {
@@ -1663,10 +1663,10 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
             $scope.loaderr = false;
 
 
-        }else{
+        } else {
 
 
-        // if ($scope.final_obj.BranchName != null && $scope.final_obj.BranchNameInArabic != null && $scope.final_obj.Address != null && $scope.final_obj.Longitude != null && $scope.final_obj.Latitude != null) {
+            // if ($scope.final_obj.BranchName != null && $scope.final_obj.BranchNameInArabic != null && $scope.final_obj.Address != null && $scope.final_obj.Longitude != null && $scope.final_obj.Latitude != null) {
             Branch.add($scope.final_obj).success(function (res) {
 
                 //$scope.deleteloaderr.push(false);
@@ -1693,10 +1693,10 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
                     .error(function (err) {
                         $scope.loaderr = false;
                     })
-        // } else {
-        //     alert("Please fill all the fields first");
-        //     $scope.loaderr = false;
-        // }
+            // } else {
+            //     alert("Please fill all the fields first");
+            //     $scope.loaderr = false;
+            // }
         }
     }
     $scope.showgrid = true;
@@ -1721,7 +1721,7 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
         $scope.loaderr = true;
 
 
-        
+
 
         var errors = [];
 
@@ -1757,17 +1757,17 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
             // $scope.errorText = "Name (English), Name (Arabic), Address , GPS (Longitude) , GPS (Latitude) Or City is Empty";
             $scope.errorText = "";
             for (var i = 0; i < errors.length; i++) {
-                console.log('errors occured',errors[i].message);
-                if(errors.length-2 > i){
+                console.log('errors occured', errors[i].message);
+                if (errors.length - 2 > i) {
                     $scope.errorText += errors[i].message + ", ";
-                }else if(errors.length-2 == i){
+                } else if (errors.length - 2 == i) {
                     $scope.errorText += errors[i].message + " and ";
                 }
-                else if(errors.length-1 == i) {
+                else if (errors.length - 1 == i) {
                     $scope.errorText += errors[i].message + "";
                 }
-                
-                
+
+
             }
             $scope.showErrorAlert = true;
             $scope.switchBool = function (value) {
@@ -1777,24 +1777,24 @@ app.controller('BranchMainInfo', function ($scope, User, Branch, $rootScope) {
             $scope.loaderr = false;
 
 
-        }else{
+        } else {
 
 
 
 
-        Branch.update($scope.final_obj).success(function (res) {
-            // $scope.allBranches.push($scope.final_obj);
-            $scope.allBranches[$scope.gridindex] = $scope.final_obj;
-            $scope.final_obj = {};
-            $scope.showgrid = true;
-            $scope.saveBtnShow = true;
-            $scope.updateBtnShow = false;
-            $scope.loaderr = false;
-            $scope.showErrorAlert = false;
-        })
-                .error(function (err) {
-                    $scope.loaderr = false;
-                })
+            Branch.update($scope.final_obj).success(function (res) {
+                // $scope.allBranches.push($scope.final_obj);
+                $scope.allBranches[$scope.gridindex] = $scope.final_obj;
+                $scope.final_obj = {};
+                $scope.showgrid = true;
+                $scope.saveBtnShow = true;
+                $scope.updateBtnShow = false;
+                $scope.loaderr = false;
+                $scope.showErrorAlert = false;
+            })
+                    .error(function (err) {
+                        $scope.loaderr = false;
+                    })
         }
     }
 
@@ -1966,14 +1966,20 @@ app.controller('BranchShitfCtrl', function ($scope, Branch, $rootScope, $filter,
                 $scope.saveShiftButton = false;
                 $scope.updateShiftButton = true;
             } else {
+                $scope.addShiftObj.BranchWorkingDayId = "";
+                $scope.addShiftObj.ShiftTitle_En = "";
+                $scope.addShiftObj.ShiftTitle_Ar = "";
+                $scope.timeObj.ShiftStartTime = "";
+                $scope.timeObj.ShiftEndTime = "";
+                $scope.saveShiftButton = true;
+                $scope.updateShiftButton = false;
                 console.log('Shift not exist for this Branch', res);
             }
-        })
-                .error(function (err) {
-                    console.log('err', err);
-                    $scope.isBranchShiftLoading = false;
+        }).error(function (err) {
+            console.log('err', err);
+            $scope.isBranchShiftLoading = false;
 
-                })
+        })
     }
 
     $scope.deleteBranchShift = function (obj, index) {
