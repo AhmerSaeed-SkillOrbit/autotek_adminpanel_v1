@@ -348,11 +348,11 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                 }
                 else if (ind === 1) {
 //                 i-e available service tab
+                    $rootScope.isDataLoading = true;
                     $('ul > li').removeClass("li_disabled");
                     $rootScope.showAddNewButton = false;
                     User.getServices().success(function (res) {
                         if (res !== "" || res !== "undefined") {
-
                             Branch.availableService($rootScope.branchId).success(function (avlServices) {
                                 if (avlServices.length > 0) {
                                     console.log("asdf", avlServices);
@@ -369,31 +369,43 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                                             }
                                         }
                                     }
-//                            $scope.isDataLoading = false;
+                                    $rootScope.isDataLoading = false;
                                 } else {
                                     console.log("No Available Service in Selected Branch is Exist");
                                     for (var i = 0; i < res.length; i++) {
                                         $rootScope.allServices.push(res[i]);
                                     }
+                                    $rootScope.isDataLoading = false;
                                 }
                             })
                                     .error(function (err) {
                                         console.log("Error in available services", err);
-//                                $scope.isDataLoading = false;
+                                        $rootScope.isDataLoading = false;
                                     });
                         } else {
 
                         }
-//                        $scope.isDataLoading = false;
                     }).error(function (err) {
                         console.log(err);
-//                                $scope.isDataLoading = false;
+                        $rootScope.isDataLoading = false;
                     });
                 }
-                else if (ind === 3) {
+                else if (ind === 2) {
+//                   i-e shift details tab
                     $('ul > li').removeClass("li_disabled");
                     $rootScope.showAddNewButton = false;
+                    $rootScope.allServices = [];
+//                   this is for shift detail page
+                    Appointment.getBranchWorkingDays($rootScope.branchId)
+                            .success(function (res) {
+                                $rootScope.availableWorkingDays = res;
+                            });
+                }
+                else if (ind === 3) {
 //                  i-e workingday tab 
+                    $('ul > li').removeClass("li_disabled");
+                    $rootScope.showAddNewButton = false;
+                    $rootScope.isDataLoading = true;
                     $rootScope.allServices = [];
                     $rootScope.days = [{
                             checked: false,
@@ -420,7 +432,6 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
 //                 i-e working day tab
                     Appointment.getBranchWorkingDays($rootScope.branchId)
                             .success(function (res) {
-                                console.log('Available Working Days', res);
                                 $rootScope.availableWorkingDays = res;
                                 if (res !== "" || res !== "undefined") {
                                     console.log('Testing');
@@ -433,33 +444,12 @@ angular.module('Autotek', ['ui.router', 'Autotek.controller', 'CoreApi', 'LocalS
                                                 console.log('not-matched');
                                             }
                                         }
-
-//                                        if (res[i].WorkingDay) {
-//                                            console.log('exit');
-//                                            if (res[i].WorkingDay === $rootScope.days[i].value) {
-//                                                console.log('matched');
-//                                            } else {
-//                                                $rootScope.days.checked = true;
-//                                                console.log('not matched');
-//                                            }
-//                                        } else {
-//                                            console.log('not exit');
-//                                        }
                                     }
                                 }
+                                $rootScope.isDataLoading = false;
                             });
                 }
-                else if (ind === 2) {
-//                   i-e shift details tab
-                    $('ul > li').removeClass("li_disabled");
-                    $rootScope.showAddNewButton = false;
-                    $rootScope.allServices = [];
-//                   this is for shift detail page
-                    Appointment.getBranchWorkingDays($rootScope.branchId)
-                            .success(function (res) {
-                                $rootScope.availableWorkingDays = res;
-                            });
-                }
+
             }
 
             $rootScope.actives = [true, false, false, false, false, false, false, false, false, false, false, false];
