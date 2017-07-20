@@ -17,6 +17,10 @@
     <section class="content">
         <div class="box box-default">
             <div class="box-body">
+                <div class="alert alert-success" ng-show="showSuccessAlert">
+                    <button type="button" class="close" data-ng-click="switchBool('showSuccessAlert')">×</button>
+                    <strong>Service added successfuly</strong> 
+                </div>
                 <div class="alert alert-danger" ng-show="showErrorAlert">
                     <button type="button" class="close" data-ng-click="switchBool('showErrorAlert')">×</button>
                     <strong>{{errorText}}</strong> 
@@ -27,16 +31,31 @@
                         <div class="col-md-12">
                             <div class="col-md-6">
                                 <label for="inputName" class="col-md-4 control-label">Customer</label>
-                                <div class="col-md-8">
+                                <div class="col-md-8" ng-if="!isCustomerLoading">
                                     <input type="text" ng-model="CustomerName" class="form-control" placeholder="Customer" autocomplete="" disabled="true">
                                     <input type="hidden" ng-model="finalObj.CustomerId" class="form-control" placeholder="Search Customer" autocomplete="" disabled="true">
                                 </div>
+                                <div class="col-md-8" ng-if="isCustomerLoading">
+                                    <div ng-if="isCustomerLoading" style="width: 100px; margin: auto;">
+                                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row form-group">
-                                <label for="inputName" class="col-sm-2 control-label">Select City</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control" name="citySelect" ng-options="option.CityName for option in cities.availableOptions track by option.Id" ng-model="cities.selectedOption" ng-change="cityChanged()">
+                            <div class="col-md-6">
+                                <label for="inputName" class="col-md-4 control-label">Select City</label>
+                                <div class="col-md-8" ng-if="!isCityLoading">
+                                    <select class="form-control" name="citySelect" ng-options="option.CityName for option in cities.availableOptions track by option.CityId" ng-model="cities.selectedOption" ng-change="cityChanged()">
                                     </select> 
+                                </div>
+                                <!-- <div class="col-md-8" ng-if="!isCityLoading">
+                                    <select class="form-control" name="citySelect" ng-options="option.CityName for option in cities.availableOptions track by option.Id" ng-model="cities.selectedOption" ng-change="cityChanged()">
+                                        <option ng-repeat="x in option.CityName" value="{{x.CityId}}">{{x.CityName}}</option>
+                                    </select> 
+                                </div> -->
+                                <div class="col-md-8" ng-if="isCityLoading">
+                                    <div ng-if="isCityLoading" style="width: 100px; margin: auto;">
+                                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -46,22 +65,32 @@
                             <div class="col-md-6">
                                 <label for="inputName" class="col-md-4 control-label">Branch</label>
 
-                                <div class="col-md-8">
-                                    <select class="form-control" ng-model="finalObj.AppointmentSlot.BranchId">
+                                <div class="col-md-8" ng-if="!isBranchLoading">
+                                    <select class="form-control" ng-model="finalObj.AppointmentSlot.BranchId" ng-change="branchChanged()">
                                         <option ng-repeat="x in branches.availableOptions" value="{{x.Id}}">{{x.BranchName}}</option>
                                     </select>
                                     <!--                                    <select class="form-control" name="branchSelect" ng-options="option.BranchName for option in branches.availableOptions track by option.Id" ng-model="branches.selectedOption" ng-change="branchChanged()">
                                                                         </select> -->
                                 </div>
+                                <div class="col-md-8" ng-if="isBranchLoading">
+                                    <div ng-if="isBranchLoading" style="width: 100px; margin: auto;">
+                                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="inputName" class="col-md-4 control-label">Service</label>
-                                <div class="col-md-8">
-                                    <select class="form-control" ng-model="finalObj.TypeOfService">
+                                <div class="col-md-8" ng-if="!isServicesLoading">
+                                    <select class="form-control" ng-model="finalObj.TypeOfService" ng-change="servicesChanged()">
                                         <option ng-repeat="x in services.availableOptions" value="{{x.Id}}">{{x.Title_Eng}}</option>
                                     </select>
                                     <!--                                    <select  class="form-control" name="servicesSelect" ng-options="option.Title_Eng for option in services.availableOptions track by option.Id" ng-model="services.selectedOption" >
                                                                         </select>  -->
+                                </div>
+                                <div class="col-md-8" ng-if="isServicesLoading">
+                                    <div ng-if="isServicesLoading" style="width: 100px; margin: auto;">
+                                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,24 +104,32 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input id="datenow" class="form-control" type="text" ng-model="dateObj.selectdDate" disabledates dates="disableDates" serviceid="services.selectedOption" branchid="branches.selectedOption">
+                                        <!-- <input id="datenow" class="form-control" type="text" ng-model="dateObj.selectdDate" disabledates dates="disableDates" serviceid="services.selectedOption" branchid="branches.selectedOption"> -->
+                                        <input id="datenow" class="form-control" type="text" ng-model="dateObj.selectdDate" disabledates dates="disableDates" serviceid="finalObj.TypeOfService" branchid="finalObj.AppointmentSlot.BranchId">
                                     </div>
                                 </div>
                             </div>  
                             <div class="col-md-6">
                                 <label for="inputName" class="col-md-4 control-label">Select Appointment</label>
-                                <div class="col-md-8">
+                                <div class="col-md-8" ng-if="!isAppointmentLoading">
                                     <select class="form-control" ng-model="finalObj.mixtime" ng-change="finalObj.mixtime()">
                                         <option ng-repeat="x in appointments"> {{x.StartTimeStr}}-{{x.EndTimeStr}}</option>
                                     </select>
+                                </div>
+                                <div class="col-md-8" ng-if="isAppointmentLoading">
+                                    <div ng-if="isAppointmentLoading" style="width: 100px; margin: auto;">
+                                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div> 
                     <div class="row form-group">
                         <div class="col-md-12">
-                            <br><div class="btn btn-primary" ng-class="{
-                                        'spinner-wave' : loaderr == true}" ng-click="scheduleAppointment()"><span ng-if="!loaderr">Schedule</span>
+                            <br>
+                            <div class="btn btn-primary" ng-class="{
+                                        'spinner-wave' : loaderr == true}" ng-click="scheduleAppointment()">
+                                        <span ng-if="!loaderr" >Schedule</span>
                                 <div></div>
                                 <div></div>
                                 <div></div>

@@ -26,59 +26,70 @@
                     <strong>Holiday deleted successfuly</strong> 
                 </div>
                 <div class="form-horizontal">
+                    <div class="row form-group" style="margin-right: 0">
+                        <div class="pull-right box-tools">
+                            <button class="btn btn-danger" ng-value="$root.btnCaption" ng-click="showShiftYearForm()" ng-if="showAddNewButton"><i class="fa fa-file-o"></i>{{$root.btnCaption}}</button>
+                        </div>
+                    </div>
                     <legend>Shift Basic Info</legend>
                     <div class="row form-group">
                         <div class="col-md-12">
-                            <div class="col-md-6">
-                                <label for="inputName" class="control-label">Year Title (English)</label>
-                                <div class="input-group" style="">
-                                    <input type="text" ng-model="final_obj.YearTitle_En" class="form-control" autocomplete="off" style="width: 522px;">
+                            <div style="" id="shiftYearFormDiv" ng-if="showShiftYearFormDiv">
+                                <div class="alert alert-danger" ng-show="showErrorAlert" > 
+                                    <button type="button" class="close" data-ng-click="switchBool('showErrorAlert')">×</button>
+                                    <strong>{{errorText}}</strong> 
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="inputName" class="control-label">Year Title (Arabic)</label>
-                                <div class="input-group" style="">
-                                    <input type="text" ng-model="final_obj.YearTitle_Ar" class="form-control" autocomplete="off" style="width: 522px;">
+                                <div class="col-md-6 hidden">
+                                    <label for="inputName" class="control-label">Year Title (English)</label>
+                                    <div class="input-group" style="">
+                                        <input type="text" ng-model="final_obj.YearTitle_En" class="form-control" autocomplete="off" style="width: 522px;">
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-md-6 hidden">
+                                    <label for="inputName" class="control-label">Year Title (Arabic)</label>
+                                    <div class="input-group" style="">
+                                        <input type="text" ng-model="final_obj.YearTitle_Ar" class="form-control" autocomplete="off" style="width: 522px;">
+                                    </div>
+                                </div>
 
-                            <div class="col-md-6">
-                                <br><label for="inputName" class="control-label">Start Date</label>
-                                <div class="input-group" style="">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
+                                <div class="col-md-6">
+                                    <br><label for="inputName" class="control-label">Start Date</label>
+                                    <div class="input-group" style="">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="date" ng-model="dateObj.YearStartDate" class="form-control datepicker" autocomplete="off">
                                     </div>
-                                    <input type="date" ng-model="dateObj.YearStartDate" class="form-control datepicker" autocomplete="off">
+                                </div>  
+                                <div class="col-md-6">
+                                    <br><label for="inputName" class="control-label">End Date</label>
+                                    <div class="input-group" style="">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="date" ng-model="dateObj.YearEndDate" class="form-control datepicker" autocomplete="off">
+                                    </div>
                                 </div>
-                            </div>  
-                            <div class="col-md-6">
-                                <br><label for="inputName" class="control-label">End Date</label>
-                                <div class="input-group" style="">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="date" ng-model="dateObj.YearEndDate" class="form-control datepicker" autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div><br>
-                                    <div class="btn btn-primary"  ng-class="{
-                                            'spinner-wave'
-                                            : loaderr == true}" ng-show="saveBtnShow" ng-click="addShftYear()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Save</span>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div class="btn btn-primary" ng-show="updateBtnShow" ng-class="{
-                                            'spinner-wave'
-                                                    : loaderr == true}" ng-click="update()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Update</span>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
+                                <div class="col-md-12">
+                                    <div><br>
+                                        <div class="btn btn-primary"  ng-class="{
+                                                'spinner-wave'
+                                                : loaderr == true}" ng-show="saveBtnShow" ng-click="addShftYear()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Save</span>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="btn btn-primary" ng-show="updateBtnShow" ng-class="{
+                                                'spinner-wave'
+                                                        : loaderr == true}" ng-click="update()"><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i> Update</span>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

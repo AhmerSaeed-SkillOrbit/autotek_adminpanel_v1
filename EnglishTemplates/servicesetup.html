@@ -27,53 +27,60 @@
                           <strong>Holiday deleted successfuly</strong> 
                     </div>
                 <div class="form-horizontal">
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Service Title (English)</label>
-                        <div class="col-sm-4">
-                            <input type="text" ng-model="serviceTitleEn" ng-value="serviceTitleEn" class="form-control" placeholder="Service Title (English)" autocomplete="off">
+                    <div class="row form-group" style="margin-right: 0">
+                        <div class="pull-right box-tools">
+                            <button class="btn btn-danger" ng-value="$root.btnCaption" ng-click="showServiceSetupForm()" ng-if="showAddNewButton"><i class="fa fa-file-o"></i>{{$root.btnCaption}}</button>
                         </div>
                     </div>
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Service Title (Arabic)</label>
-                        <div class="col-sm-4">
-                            <input type="text" ng-model="serviceTitleAr"  ng-value="serviceTitleAr" class="form-control" placeholder="Service Title (Arabic)" autocomplete="off">
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Duration (min)</label>
-                        <div class="col-sm-4">
-                            <input type="number" ng-model="serviceDuration" ng-value="serviceDuration" class="form-control" placeholder="Duration (min)" autocomplete="off" min="0"> 
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Service Description (English)</label>
-                        <div class="col-sm-4">
-                            <textarea rows="4"  ng-model="serviceDescEn" ng-value="serviceDescEn" class="form-control" placeholder="Service Description (English)" autocomplete="off"></textarea>
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Service Description (Arabic)</label>
-                        <div class="col-sm-4">
-                            <textarea rows="4" ng-model="serviceDescAR" ng-value="serviceDescAR" class="form-control" placeholder="Service Description (Arabic)" autocomplete="off"></textarea>
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-4">
-                            <div class="btn btn-primary" ng-class="{'spinner-wave' : loaderr == true}" ng-click="addService()" ng-show="saveBtnShow">
-                                <!-- ngIf: !loaderr --><span ng-if="!loaderr" class="ng-scope"> <i class="fa fa-save"></i> Save</span>
-                                <!-- end ngIf: !loaderr -->
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
+                    <div style="" id="serviceSetupFormDiv" ng-if="showServiceSetupFormDiv">
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Service Title (English)</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="serviceTitleEn" class="form-control" placeholder="Service Title (English)" autocomplete="off">
                             </div>
-                             <div ng-show="updateBtnShow" class="btn btn-primary"  ng-click="updateService()" > <i class="fa fa-save"></i> Update</div>
                         </div>
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Service Title (Arabic)</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="serviceTitleAr"  ng-value="serviceTitleAr" class="form-control" placeholder="Service Title (Arabic)" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Duration (min)</label>
+                            <div class="col-sm-4">
+                                <input type="number" ng-model="serviceDuration" ng-value="serviceDuration" class="form-control" placeholder="Duration (min)" autocomplete="off" min="0"> 
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Service Description (English)</label>
+                            <div class="col-sm-4">
+                                <textarea rows="4"  ng-model="serviceDescEn" ng-value="serviceDescEn" class="form-control" placeholder="Service Description (English)" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Service Description (Arabic)</label>
+                            <div class="col-sm-4">
+                                <textarea rows="4" ng-model="serviceDescAR" ng-value="serviceDescAR" class="form-control" placeholder="Service Description (Arabic)" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="btn btn-primary" ng-class="{'spinner-wave' : loaderr == true}" ng-click="addService()" ng-show="saveBtnShow">
+                                    <!-- ngIf: !loaderr --><span ng-if="!loaderr" class="ng-scope"> <i class="fa fa-save"></i> Save</span>
+                                    <!-- end ngIf: !loaderr -->
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                 <div ng-show="updateBtnShow" class="btn btn-primary"  ng-click="updateService()" > <i class="fa fa-save"></i> Update</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
 
                 <div ng-show="showgrid">
@@ -102,13 +109,14 @@
                         </tbody>
                     </table>
                 </div>
+                <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
+                    <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                </div>
             </div>
         </div>
     </section>
     <!-- /.content -->
-    <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
-            <img src="assets/loader.gif" style="width: 100px; height: 100px;">
-    </div>
+    
 </div>
 <!-- /.content-wrapper -->
 <footer-bar-english></footer-bar-english>

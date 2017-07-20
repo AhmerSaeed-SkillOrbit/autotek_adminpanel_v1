@@ -25,9 +25,15 @@
                             <!-- <div class="col-md-8">
                                 <input type="text" class="form-control" placeholder="Branch" autocomplete="off">
                             </div> -->
-                            <div class="col-md-8">
+                            <div class="col-md-8" ng-if="!isBranchLoading">
                                 <select class="form-control" name="branchSelect" ng-options="option.BranchName for option in branches.availableOptions track by option.Id" ng-model="branches.selectedOption" ng-change="branchChanged()">
-                                </select> 
+                                </select>
+                                 
+                            </div>
+                            <div class="col-md-8" ng-if="isBranchLoading">
+                                <div ng-if="isBranchLoading" style="width: 100px; margin: auto;">
+                                    <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -35,9 +41,14 @@
                             <!-- <div class="col-md-8">
                                 <input type="text" class="form-control" placeholder="Service" autocomplete="off">
                             </div> -->
-                            <div class="col-md-8">
+                            <div class="col-md-8" ng-if="!isServicesLoading">
                                 <select  class="form-control" name="servicesSelect" ng-options="option.Title_Eng for option in services.availableOptions track by option.Id" ng-model="services.selectedOption" >
                                 </select>  
+                            </div>
+                            <div class="col-md-8" ng-if="isServicesLoading">
+                                <div ng-if="isServicesLoading" style="width: 100px; margin: auto;">
+                                    <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,11 +89,17 @@
                         </div> -->
 
                     </div>
-<div class="row form-group">
-    <div class="col-md-2"></div>
-                     <div ng-controller="CalendarCtrl" class="col-md-8">
-                            <div ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources" calendar="week"></div> 
-                        </div> </div>
+                    <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
+                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                        </div>
+                        <div ng-controller="CalendarCtrl" class="col-md-8">
+                            <div ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources" calendar="week">
+                            </div> 
+                        </div> 
+                    </div>
                 </div>
             </div>
         </div>
