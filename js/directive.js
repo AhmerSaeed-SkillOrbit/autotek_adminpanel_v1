@@ -141,7 +141,9 @@ angular.module('Autotek.directive', [])
                     $("#datenow").datepicker({
                         beforeShowDay: DisableSpecificDates,
                         onSelect: function (dateText, inst) {
+                            $rootScope.$broadcast('SelectDate', {err: scope.errorText})
                             console.log('selected dated', dateText);
+                            // scope.isAppointmentLoading = true;
                             $rootScope.appointDate =dateText;
                             var selectedDate = new Date(dateText);
 
@@ -164,7 +166,7 @@ angular.module('Autotek.directive', [])
                             $http.post(url, params, {
                                 headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
                             }).success(function (result) {
-                                $http.get('http://autotecapi.azurewebsites.net/api/availableappointmentslots/' + scope.branchid.Id + '/' + scope.serviceid.Id + '/' + selectedYear + '/' + selectedMonth + '/' + selectedDay, {
+                                $http.get('http://autotecapi.azurewebsites.net/api/availableappointmentslots/' + scope.branchid + '/' + scope.serviceid + '/' + selectedYear + '/' + selectedMonth + '/' + selectedDay, {
                                     headers: {
                                         'Authorization': "Bearer" + " " + result.access_token
                                     }

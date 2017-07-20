@@ -25,42 +25,50 @@
                           <button type="button" class="close" data-ng-click="switchBool('showSuccessAlertDelete')">×</button>
                           <strong>Holiday deleted successfuly</strong> 
                     </div>
+
                 <div class="form-horizontal">
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Start Date</label>
-                        <div class="col-sm-4 input-group" style="padding:0px 15px">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
+                    <div class="row form-group" style="margin-right: 0">
+                        <div class="pull-right box-tools">
+                            <button class="btn btn-danger" ng-value="$root.btnCaption" ng-click="showAnnualHolidaysForm()" ng-if="showAddNewButton"><i class="fa fa-file-o"></i>{{$root.btnCaption}}</button>
+                        </div>
+                    </div>
+                    <div style="" id="annualHolidaysFormDiv" ng-if="showAnnualHolidaysFormDiv" >
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Start Date</label>
+                            <div class="col-sm-4 input-group" style="padding:0px 15px">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="date" ng-model="startdate" value="{{startdate}}"  class="form-control datepicker"  autocomplete="off">
                             </div>
-                            <input type="date" ng-model="startdate" value="{{startdate}}"  class="form-control datepicker"  autocomplete="off">
                         </div>
-                    </div>
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">End Date</label>
-                        <div class="col-sm-4 input-group" style="padding:0px 15px">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">End Date</label>
+                            <div class="col-sm-4 input-group" style="padding:0px 15px">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="date" ng-model="enddate" value={{enddate}} class="form-control datepicker"  autocomplete="off">
                             </div>
-                            <input type="date" ng-model="enddate" value={{enddate}} class="form-control datepicker"  autocomplete="off">
                         </div>
-                    </div>
-                    <div class="row form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Title</label>
-                        <div class="col-sm-4">
-                            <input type="text" ng-model="ttl"  ng-value="ttl" class="form-control" placeholder="title..." autocomplete="off">
+                        <div class="row form-group">
+                            <label for="inputName" class="col-sm-2 control-label">Title</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="ttl"  ng-value="ttl" class="form-control" placeholder="title..." autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row form-group">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-4">
-                            <div class="btn btn-primary" ng-show="saveBtnShow" ng-class="{'spinner-wave' : loaderr == true}" ng-click="addAnnualHolday()" ><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i></span> Save
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                         <div ng-show="updateBtnShow" class="btn btn-primary"  ng-click="update1()" > <i class="fa fa-save"></i> Update</div>
+                        <div class="row form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                <div class="btn btn-primary" ng-show="saveBtnShow" ng-class="{'spinner-wave' : loaderr == true}" ng-click="addAnnualHolday()" ><span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i></span> Save
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                             <div ng-show="updateBtnShow" class="btn btn-primary"  ng-click="update1()" > <i class="fa fa-save"></i> Update</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,13 +93,14 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
+                        <img src="assets/loader.gif" style="width: 100px; height: 100px;">
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-    <div ng-if="isDataLoading" style="width: 100px; margin: auto;">
-            <img src="assets/loader.gif" style="width: 100px; height: 100px;">
-    </div>
+    
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->

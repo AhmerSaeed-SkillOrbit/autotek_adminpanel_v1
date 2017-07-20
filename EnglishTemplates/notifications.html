@@ -71,15 +71,19 @@
                             <textarea rows="4"  ng-model="message" ng-value="serviceDescEn" class="form-control" placeholder="Enter Message" autocomplete="off"></textarea>
                         </div>
                     </div>
-                    
-                  <div  class="btn btn-primary" ng-class="{'spinner-wave' : loaderr == true}"  ng-click="send()" >
-                    <span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i>Send</span> 
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                  <div class="row form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">  
+                      <div  class="btn btn-primary" ng-class="{'spinner-wave' : loaderr == true}"  ng-click="send()" >
+                        <span ng-if="!loaderr" class="ng-scope"><i class="fa fa-save"></i>Send</span> 
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
 
+                      </div>
+                    </div>
                   </div>
 
                 </div>
