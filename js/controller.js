@@ -3267,7 +3267,14 @@ app.controller('AppointCalenderCtrl', function ($scope, Appointment, $filter, $h
 
     $scope.changeDateAndView = function () {
 $rootScope.isDataLoading = true;
-        $scope.mydate = new Date($scope.startDate);
+$scope.mydate = new Date($scope.startDate);
+        if($scope.startDate == null || $scope.startDate == ""){
+            // alert('null date');
+            // return;
+            $scope.startDate = new Date();
+            $scope.mydate = new Date();
+        }
+        
 
         // var numberOfDaysToAdd = $scope.selectedView;
         // $scope.newdate = $scope.mydate.setDate($scope.mydate.getDate() + numberOfDaysToAdd);
@@ -3358,8 +3365,47 @@ app.controller('CalendarCtrl', function ($scope, $compile, uiCalendarConfig, $fi
     };
     /* alert on eventClick */
     $scope.alertOnEventClick = function (date, jsEvent, view) {
-        $scope.alertMessage = (date.title + ' was clicked ');
+        // $scope.alertMessage = (date.title + ' was clicked ');
+        if(view.name == "basicDay"){
+        var dataArray = date.title.split(" , ");
+        var name = dataArray[0].replace("Customer Name:", "<strong>Customer Name:</strong>");
+        var sT = dataArray[1].replace("Start Time:", "<strong>Start Time:</strong>");
+        var eT = dataArray[2].replace("End Time:", "<strong>End Time:</strong>");
+
+        console.log('click event',date.title);
+        console.log('click event',date);
+        console.log('click event view',view);
+        console.log('click event view name',view.name);
+        console.log('array',dataArray);
+
+        
+        // alert('click event '+date.title);
+        bootbox.alert("<h1 style='text-align: center;'>Schedule Appointment</h1><br>"+name+"<br>"+sT+"<br>"+eT);
+        }
     };
+
+    /* alert on dayClick */
+    $scope.alertOnDayClick = function (date, jsEvent, view) {
+        Date.prototype.addDays = function (days) {
+            var dat = new Date(this.valueOf());
+            dat.setDate(dat.getDate() + days);
+            return dat;
+        }
+
+        var sD1 = $filter("date")(new Date(date._d), 'yyyy-MM-dd');
+        var eD1 = $filter("date")((new Date(date._d)).addDays(1), 'yyyy-MM-dd');
+
+
+        // $scope.alertMessage = (date.title + ' was clicked ');
+        // console.log('day click event',date._d);
+        // console.log('day click event',date);
+        // console.log('day click event',sD1);
+        // console.log('day click event',eD1);
+        $rootScope.$broadcast('DateChangeEvent', {startDate: sD1, endDate: eD1, selectedView: 1})
+        // alert('click event '+date.title);
+        // bootbox.alert("This is the default alert!");
+    };
+
     /* alert on Drop */
     $scope.alertOnDrop = function (event, delta, revertFunc, jsEvent, ui, view) {
         $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
@@ -3427,6 +3473,7 @@ app.controller('CalendarCtrl', function ($scope, $compile, uiCalendarConfig, $fi
                 defaultDate: typeof args.startDate == "undefined" ? new Date() : new Date(args.startDate),
                 gotoDate: new Date(args.startDate),
                 eventClick: $scope.alertOnEventClick,
+                dayClick: $scope.alertOnDayClick,
                 eventDrop: $scope.alertOnDrop,
                 eventResize: $scope.alertOnResize,
                 eventRender: $scope.eventRender
@@ -3475,9 +3522,9 @@ app.controller('CalendarCtrl', function ($scope, $compile, uiCalendarConfig, $fi
 
                 for (var i = 0; i < res.length; i++) {
                     $scope.events.push({
-                        title: res[i].CustomerName + ' ' + $filter("date")(res[i].AppointmentStartTime, 'h:m:a') + ' ' + $filter("date")(res[i].AppointmentEndTime, 'h:m:a'),
+                        title: 'Customer Name: '+res[i].CustomerName + ' , Start Time: ' + $filter("date")(res[i].AppointmentStartTime, 'h:m:a') + ' , End Time: ' + $filter("date")(res[i].AppointmentEndTime, 'h:m:a'),
                         start: new Date(res[i].AppointmentStartTime),
-                        end: new Date(res[i].AppointmentEndTime)})
+                        end: new Date(res[i].AppointmentEndTime)});
                 }
 
             }
@@ -3509,6 +3556,7 @@ app.controller('CalendarCtrl', function ($scope, $compile, uiCalendarConfig, $fi
             defaultView: 'month',
             defaultDate: new Date(),
             eventClick: $scope.alertOnEventClick,
+            dayClick: $scope.alertOnDayClick,
             eventDrop: $scope.alertOnDrop,
             eventResize: $scope.alertOnResize,
             eventRender: $scope.eventRender

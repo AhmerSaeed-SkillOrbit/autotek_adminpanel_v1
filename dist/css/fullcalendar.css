@@ -393,6 +393,7 @@ hr.fc-divider {
 	border-width: 1px;
 	padding: 0;
 	vertical-align: top;
+	cursor: pointer;
 }
 
 .fc td.fc-today {
@@ -496,6 +497,7 @@ temporary rendered events).
 
 	/* don't put a border between events and/or the day number */
 	border-bottom: 0;
+	cursor: pointer;
 }
 
 .fc-row .fc-content-skeleton tbody td, /* cells with events inside (so NOT the day number cell) */
